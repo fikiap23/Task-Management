@@ -12,6 +12,8 @@ import {
   FormLabel,
   useDisclosure,
   Textarea,
+  Select,
+  Box,
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
@@ -45,6 +47,8 @@ function CreateTaskModal() {
       console.log(editorRef.current.getContent())
     }
   }
+
+  const [showDatePicker, setShowDatePicker] = useState(false)
   const [date, setDate] = useState(new Date())
 
   function onChange(date) {
@@ -84,6 +88,15 @@ function CreateTaskModal() {
             </FormControl>
 
             <FormControl mt={4}>
+              <FormLabel>Mata Kuliah</FormLabel>
+              <Select placeholder="Select option">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+              </Select>
+            </FormControl>
+
+            <FormControl mt={4}>
               <FormLabel>Deskripsi</FormLabel>
               <>
                 <Editor
@@ -116,7 +129,7 @@ function CreateTaskModal() {
                     toolbar:
                       'bold italic forecolor | alignleft aligncenter ' +
                       'alignright alignjustify | bullist numlist outdent indent | ' +
-                      'removeformat | help',
+                      'removeformat ',
                     content_style:
                       'body { font-family:Helvetica,Arial,sans-serif; font-size:14px;} p {margin: 0;}',
                   }}
@@ -125,8 +138,15 @@ function CreateTaskModal() {
               </>
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Deadline</FormLabel>
-              <Calendar date={date} onChange={onChange} />;
+              <Button
+                colorScheme="whatsapp"
+                onClick={() => setShowDatePicker(!showDatePicker)}
+              >
+                {showDatePicker ? 'Deadline has been set' : 'Set Deadline'}
+              </Button>
+              <Box mt={-5} hidden={!showDatePicker}>
+                <Calendar date={date} onChange={onChange} />;
+              </Box>
             </FormControl>
           </ModalBody>
 
