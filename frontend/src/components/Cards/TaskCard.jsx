@@ -54,7 +54,7 @@ export default function TaskCard() {
           variant="solid"
           onClick={(e) => {
             e.preventDefault()
-            navigate(`/`)
+            navigate(`/task/1`)
           }}
         >
           Detail
