@@ -10,7 +10,7 @@ function App() {
     <>
       <Header />
       <Flex>
-        <Box width={'300px'} bg={'red'} className="hidden md:block  ">
+        <Box width={'300px'} className="hidden md:block  ">
           <Sidebar />
         </Box>
         <Container maxWidth={'full'} fontFamily={'arial'}>
