@@ -3,13 +3,15 @@
 import { useState } from 'react'
 import { Box, Heading, Text, Img, Flex, HStack } from '@chakra-ui/react'
 import { BsArrowUpRight, BsHeartFill, BsHeart } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
 
 export default function BoardCard() {
   const [liked, setLiked] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <Box
-      w="xs"
+      w="full"
       rounded={'sm'}
       overflow={'hidden'}
       bg="white"
@@ -56,6 +58,10 @@ export default function BoardCard() {
           roundedBottom={'sm'}
           cursor={'pointer'}
           w="full"
+          onClick={(e) => {
+            e.preventDefault()
+            navigate(`/task`)
+          }}
         >
           <Text fontSize={'md'} fontWeight={'semibold'}>
             View more

@@ -7,7 +7,10 @@ const TaskPage = () => {
   return (
     <>
       <CreateTaskModal />
-      <Grid gap={4} templateColumns="repeat(3, 1fr)">
+      <Grid
+        gap={4}
+        templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
+      >
         <TaskCard></TaskCard>
         <TaskCard></TaskCard>
         <TaskCard></TaskCard>
