@@ -49,6 +49,7 @@ function CreateTaskModal() {
 
   function onChange(date) {
     setDate(date)
+    console.log(date)
   }
   return (
     <>
@@ -113,12 +114,11 @@ function CreateTaskModal() {
                       'wordcount',
                     ],
                     toolbar:
-                      'undo redo | blocks | ' +
                       'bold italic forecolor | alignleft aligncenter ' +
                       'alignright alignjustify | bullist numlist outdent indent | ' +
                       'removeformat | help',
                     content_style:
-                      'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; } p{ line-height:5px; }',
+                      'body { font-family:Helvetica,Arial,sans-serif; font-size:14px;} p {margin: 0;}',
                   }}
                 />
                 <button onClick={log}>Log editor content</button>
