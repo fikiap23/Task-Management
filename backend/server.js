@@ -3,7 +3,9 @@ import dotenv from 'dotenv'
 import connectDB from './db/connectDB.js'
 import cookieParser from 'cookie-parser'
 import userRoutes from './routes/userRoutes.js'
-import postRoutes from './routes/postRoutes.js'
+
+import subjectRoutes from './routes/subjectRoutes.js'
+import taskRoutes from './routes/taskRoutes.js'
 
 dotenv.config()
 
@@ -19,7 +21,8 @@ app.use(cookieParser())
 
 // Routes
 app.use('/v1/api/users', userRoutes)
-app.use('/v1/api/posts', postRoutes)
+app.use('/v1/api/subjects', subjectRoutes)
+app.use('/v1/api/tasks', taskRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)
