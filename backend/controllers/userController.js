@@ -5,12 +5,17 @@ import mongoose from 'mongoose'
 const signupUser = async (req, res) => {
   try {
     // property yg ada di req.body
-    const { name, email, username, password } = req.body
+    const { name, email, username, password, repassword } = req.body
 
     // cek apakah user ada di db
     const user = await User.findOne({ $or: [{ email }, { username }] })
     if (user) {
       return res.status(400).json({ error: 'User already exists' })
+    }
+
+    // cek apakah password dan repassword sama
+    if (password !== repassword) {
+      return res.status(400).json({ error: 'Passwords do not match' })
     }
 
     // encrypt password
