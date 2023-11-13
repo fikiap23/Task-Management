@@ -54,12 +54,12 @@ export default function SignupCard() {
       }
 
       localStorage.setItem('user-posivibes', JSON.stringify(data))
+      setAuthScreen('login')
+      showToast('Success', 'Account created successfully', 'success')
     } catch (error) {
       console.log(error)
     } finally {
       setLoading(false)
-      setAuthScreen('login')
-      showToast('Success', 'Account created successfully', 'success')
     }
   }
   return (
