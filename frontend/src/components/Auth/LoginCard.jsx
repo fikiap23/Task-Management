@@ -1,5 +1,6 @@
 'use client'
 
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import {
   Button,
   Checkbox,
@@ -13,25 +14,93 @@ import {
   Image,
   Link,
   Box,
+  InputRightElement,
+  InputGroup,
 } from '@chakra-ui/react'
+import { useState } from 'react'
 
 import { useSetRecoilState } from 'recoil'
 import authScreenAtom from '../../atoms/authAtom'
+import userAtom from '../../atoms/userAtom'
+import useShowToast from '../../hooks/useShowToast'
 
 export default function LoginCard() {
   const setAuthScreen = useSetRecoilState(authScreenAtom)
+  const [showPassword, setShowPassword] = useState(false)
+  const setUser = useSetRecoilState(userAtom)
+  const [loading, setLoading] = useState(false)
+
+  const [inputs, setInputs] = useState({
+    username: '',
+    password: '',
+  })
+  const showToast = useShowToast()
+  const handleLogin = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/v1/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputs),
+      })
+      const data = await res.json()
+      if (data.error) {
+        showToast('Error', data.error, 'error')
+        return
+      }
+      localStorage.setItem('user-taskmanajemen', JSON.stringify(data))
+      setUser(data)
+    } catch (error) {
+      showToast('Error', error, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
       <Flex p={8} flex={1} align={'center'} justify={'center'}>
         <Stack spacing={4} w={'full'} maxW={'md'}>
           <Heading fontSize={'2xl'}>Sign in to your account</Heading>
-          <FormControl id="email">
+          <FormControl id="email" isRequired>
             <FormLabel>Email address</FormLabel>
-            <Input type="email" />
+            <Input
+              placeholder="Enter username or email"
+              value={inputs.username}
+              onChange={(e) =>
+                setInputs((inputs) => ({
+                  ...inputs,
+                  username: e.target.value,
+                }))
+              }
+            />
           </FormControl>
-          <FormControl id="password">
+          <FormControl id="password" isRequired>
             <FormLabel>Password</FormLabel>
-            <Input type="password" />
+            <InputGroup>
+              <Input
+                placeholder="Enter password"
+                value={inputs.password}
+                onChange={(e) =>
+                  setInputs((inputs) => ({
+                    ...inputs,
+                    password: e.target.value,
+                  }))
+                }
+                type={showPassword ? 'text' : 'password'}
+              />
+              <InputRightElement h={'full'}>
+                <Button
+                  variant={'ghost'}
+                  onClick={() =>
+                    setShowPassword((showPassword) => !showPassword)
+                  }
+                >
+                  {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
           <Stack spacing={6}>
             <Stack
@@ -42,7 +111,12 @@ export default function LoginCard() {
               <Checkbox>Remember me</Checkbox>
               <Text color={'blue.500'}>Forgot password?</Text>
             </Stack>
-            <Button colorScheme={'blue'} variant={'solid'}>
+            <Button
+              colorScheme={'blue'}
+              variant={'solid'}
+              onClick={handleLogin}
+              isLoading={loading}
+            >
               Sign in
             </Button>
           </Stack>
