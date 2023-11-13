@@ -68,7 +68,7 @@ export default function SignupCard() {
         <Stack spacing={4} w={'full'} maxW={'md'}>
           <Heading fontSize={'2xl'}>Sign up and get started </Heading>
           <Flex gap={2}>
-            <FormControl id="name">
+            <FormControl id="name" isRequired>
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"
@@ -77,7 +77,7 @@ export default function SignupCard() {
                 placeholder="Fullname"
               />
             </FormControl>
-            <FormControl id="username">
+            <FormControl id="username" isRequired>
               <FormLabel>username</FormLabel>
               <Input
                 onChange={(e) =>
@@ -89,7 +89,7 @@ export default function SignupCard() {
               />
             </FormControl>
           </Flex>
-          <FormControl id="email">
+          <FormControl id="email" isRequired>
             <FormLabel>Email address</FormLabel>
             <Input
               onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
@@ -99,7 +99,7 @@ export default function SignupCard() {
             />
           </FormControl>
 
-          <FormControl id="password">
+          <FormControl id="password" isRequired>
             <FormLabel>Password</FormLabel>
             <InputGroup>
               <Input
@@ -122,7 +122,7 @@ export default function SignupCard() {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          <FormControl id="repassword">
+          <FormControl id="repassword" isRequired>
             <FormLabel>Type password again</FormLabel>
             <InputGroup>
               <Input
