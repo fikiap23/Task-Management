@@ -21,7 +21,7 @@ const subjectController = {
       user.subjects.push(newSubject)
       await user.save()
 
-      return res.status(201).json({ message: 'Subject created successfully' })
+      return res.status(201).json({ name, description, banner })
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: 'Internal Server Error' })

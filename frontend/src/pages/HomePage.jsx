@@ -5,6 +5,7 @@ import subjectsAtom from '../atoms/subjectAtom'
 import userAtom from '../atoms/userAtom'
 import BoardCard from '../components/Cards/BoardCard'
 import Sidebar from '../components/Sidebar/Sidebar'
+import CreateSubjectModal from '../components/Subjects/CreateSubject'
 
 const HomePage = () => {
   const user = useRecoilValue(userAtom)
@@ -31,30 +32,32 @@ const HomePage = () => {
     getSubjects()
   }, [setSubjects, user])
 
-  if (loading) {
-    return (
-      <Flex justifyContent={'center'}>
-        <Spinner size={'xl'} />
-      </Flex>
-    )
-  }
   return (
     <Flex>
       <Box width={'300px'} className="hidden md:block  ">
         <Sidebar />
       </Box>
-      <Grid
-        gap={4}
-        templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
-        mt={4}
-      >
-        {subjects.length === 0 && <Box>No subjects found</Box>}
-        {subjects.map((subject) => (
-          <GridItem key={subject._id}>
-            <BoardCard subject={subject} />
-          </GridItem>
-        ))}
-      </Grid>
+
+      <Box mt={4}>
+        <CreateSubjectModal setSubjects={setSubjects} />
+        <Grid
+          gap={4}
+          templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
+          mt={4}
+        >
+          {loading && (
+            <Flex justifyContent={'center'}>
+              <Spinner size={'xl'} />
+            </Flex>
+          )}
+          {subjects.length === 0 && !loading && <Box>No subjects found</Box>}
+          {subjects.map((subject) => (
+            <GridItem key={subject._id}>
+              <BoardCard subject={subject} />
+            </GridItem>
+          ))}
+        </Grid>
+      </Box>
     </Flex>
   )
 }
