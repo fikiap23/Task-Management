@@ -38,11 +38,11 @@ const HomePage = () => {
         <Sidebar />
       </Box>
 
-      <Box mt={4}>
+      <Box mt={4} width={'100%'}>
         <CreateSubjectModal setSubjects={setSubjects} />
         <Grid
           gap={4}
-          templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
+          templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(4, 1fr)' }}
           mt={4}
         >
           {loading && (

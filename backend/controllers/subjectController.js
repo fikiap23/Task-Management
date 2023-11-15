@@ -5,7 +5,7 @@ const subjectController = {
   createSubject: async (req, res) => {
     try {
       const userId = req.user._id
-      const { name, description, banner } = req.body
+      const { name, dosen, type_subject, banner } = req.body
 
       const user = await User.findById(userId)
       if (!user) {
@@ -14,14 +14,15 @@ const subjectController = {
 
       const newSubject = {
         name,
-        description,
+        dosen,
+        type_subject,
         banner,
       }
 
       user.subjects.push(newSubject)
       await user.save()
 
-      return res.status(201).json({ name, description, banner })
+      return res.status(201).json({ name, dosen, type_subject, banner })
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: 'Internal Server Error' })

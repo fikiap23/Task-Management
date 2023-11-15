@@ -41,7 +41,7 @@ export default function BoardCard({ subject }) {
 
   return (
     <Box
-      w="full"
+      w={{ base: '100%', md: '250px' }}
       rounded={'sm'}
       overflow={'hidden'}
       bg="white"
@@ -79,7 +79,7 @@ export default function BoardCard({ subject }) {
       </Box>
       <Box p={4}>
         <Box
-          bg="black"
+          bg={subject.type_subject === 'Umum' ? 'black' : 'green.500'}
           display={'inline-block'}
           px={2}
           py={1}
@@ -87,14 +87,14 @@ export default function BoardCard({ subject }) {
           mb={2}
         >
           <Text fontSize={'xs'} fontWeight="medium">
-            Umum
+            {subject.type_subject}
           </Text>
         </Box>
         <Heading color={'black'} fontSize={'2xl'} noOfLines={1}>
           {subject.name}
         </Heading>
-        <Text color={'gray.500'} noOfLines={2}>
-          {subject.description}
+        <Text color={'black'} fontSize={'md'} noOfLines={2}>
+          Dosen: {subject.dosen}
         </Text>
       </Box>
       <HStack borderTop={'1px'} color="black">

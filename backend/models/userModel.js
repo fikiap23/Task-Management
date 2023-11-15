@@ -30,10 +30,13 @@ const subjectSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
+    dosen: {
       type: String,
     },
     banner: {
+      type: String,
+    },
+    type_subject: {
       type: String,
     },
     tasks: [taskSchema],

@@ -11,7 +11,6 @@ import {
   FormControl,
   FormLabel,
   useDisclosure,
-  Textarea,
   Select,
   Input,
   Flex,
@@ -20,7 +19,6 @@ import {
   useColorMode,
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
-import { Editor } from '@tinymce/tinymce-react'
 
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
@@ -28,11 +26,13 @@ import 'react-date-range/dist/theme/default.css'
 import usePreviewImg from '../../hooks/usePreviewImg'
 import useShowToast from '../../hooks/useShowToast'
 
-const MAX_CHAR = 100
+const MAX_CHAR = 50
 
 function CreateSubjectModal({ setSubjects }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [titleSubject, setTitleSubject] = useState('')
+  const [dosenSubject, setDosenSubject] = useState('')
+  const [typeSubject, setTypeSubject] = useState('')
   const initialRef = useRef(null)
   const finalRef = useRef(null)
   const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg()
@@ -42,9 +42,6 @@ function CreateSubjectModal({ setSubjects }) {
 
   const handleTitleSubjectChange = (e) => {
     const inputText = e.target.value
-    e.target.style.height = '0px'
-    e.target.style.height = e.target.scrollHeight + 'px'
-
     if (inputText.length > MAX_CHAR) {
       const truncatedText = inputText.slice(0, MAX_CHAR)
       setTitleSubject(truncatedText)
@@ -52,10 +49,14 @@ function CreateSubjectModal({ setSubjects }) {
       setTitleSubject(inputText)
     }
   }
-  const editorRef = useRef(null)
-  const log = () => {
-    if (editorRef.current) {
-      console.log(editorRef.current.getContent())
+
+  const handleDosenSubjectChange = (e) => {
+    const inputText = e.target.value
+    if (inputText.length > MAX_CHAR) {
+      const truncatedText = inputText.slice(0, MAX_CHAR)
+      setDosenSubject(truncatedText)
+    } else {
+      setDosenSubject(inputText)
     }
   }
 
@@ -69,7 +70,8 @@ function CreateSubjectModal({ setSubjects }) {
         },
         body: JSON.stringify({
           name: titleSubject,
-          description: editorRef.current.getContent(),
+          dosen: dosenSubject,
+          type_subject: typeSubject,
           banner: imgUrl,
         }),
       })
@@ -109,66 +111,32 @@ function CreateSubjectModal({ setSubjects }) {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Nama mata kuliah</FormLabel>
-              <Textarea
+              <Input
                 placeholder="Masukkan nama mata kuliah"
                 onChange={handleTitleSubjectChange}
                 value={titleSubject}
-                style={{
-                  minHeight: '0px', // Tinggi awal yang lebih kecil
-                  resize: 'none',
-                  overflow: 'hidden',
-                }}
               />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Jenis Mata kuliah </FormLabel>
-              <Select placeholder="Select option">
-                <option value="option1">Umum</option>
-                <option value="option2">Jurusan</option>
+              <Select
+                placeholder="Select option"
+                onChange={(e) => setTypeSubject(e.target.value)}
+                value={typeSubject}
+              >
+                <option value="Umum">Umum</option>
+                <option value="Jurusan">Jurusan</option>
               </Select>
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Deskripsi</FormLabel>
-              <>
-                <Editor
-                  apiKey="4xvcku7hmu0bsqdx1nxec8k8faferlrtrjy7s9x1wdx4iqjd"
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  initialValue="<p>ketikkan deskripsi</p>"
-                  init={{
-                    height: 200,
-                    menubar: false,
-                    plugins: [
-                      'advlist',
-                      'autolink',
-                      'lists',
-                      'link',
-                      'image',
-                      'charmap',
-                      'preview',
-                      'anchor',
-                      'searchreplace',
-                      'visualblocks',
-                      'code',
-                      'fullscreen',
-                      'insertdatetime',
-                      'media',
-                      'table',
-                      'code',
-                      'help',
-                      'wordcount',
-                    ],
-                    toolbar:
-                      'bold italic forecolor | alignleft aligncenter ' +
-                      'alignright alignjustify | bullist numlist outdent indent | ' +
-                      'removeformat ',
-                    content_style:
-                      'body { font-family:Helvetica,Arial,sans-serif; font-size:14px;} p {margin: 0;}',
-                  }}
-                />
-                <button onClick={log}>Log editor content</button>
-              </>
+              <FormLabel>Nama dosen</FormLabel>
+              <Input
+                placeholder="Masukkan nama dosen"
+                onChange={handleDosenSubjectChange}
+                value={dosenSubject}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Gambar</FormLabel>
