@@ -40,7 +40,7 @@ const subjectController = {
 
       const subjects = user.subjects
 
-      return res.status(200).json({ subjects })
+      return res.status(200).json(subjects)
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: 'Internal Server Error' })

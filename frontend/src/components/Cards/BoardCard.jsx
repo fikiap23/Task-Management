@@ -1,13 +1,43 @@
+/* eslint-disable react/prop-types */
 'use client'
 
 import { useState } from 'react'
-import { Box, Heading, Text, Img, Flex, HStack } from '@chakra-ui/react'
+import { Box, Heading, Text, Img, Flex, HStack, Button } from '@chakra-ui/react'
 import { BsArrowUpRight, BsHeartFill, BsHeart } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
+import useShowToast from '../../hooks/useShowToast'
+import subjectsAtom from '../../atoms/subjectAtom'
+import { useRecoilState } from 'recoil'
 
-export default function BoardCard() {
+export default function BoardCard({ subject }) {
   const [liked, setLiked] = useState(false)
   const navigate = useNavigate()
+  const [subjects, setSubjects] = useRecoilState(subjectsAtom)
+  const showToast = useShowToast()
+  const subjectId = subject._id
+
+  const deleteSubject = async () => {
+    try {
+      if (!window.confirm('Are you sure you want to delete this subject?'))
+        return
+      const response = await fetch(`/v1/api/subjects/${subjectId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        const errorMessage = await response.json()
+        throw new Error(errorMessage.message || 'Failed to delete subject')
+      }
+
+      showToast('Success', 'Subject deleted successfully', 'success')
+      setSubjects(subjects.filter((s) => s._id !== subjectId))
+    } catch (error) {
+      showToast('Error', error.message, 'error')
+    }
+  }
 
   return (
     <Box
@@ -18,10 +48,27 @@ export default function BoardCard() {
       border={'1px'}
       borderColor="black"
     >
-      <Box h={'200px'} borderBottom={'1px'} borderColor="black">
+      <Box
+        h={'200px'}
+        borderBottom={'1px'}
+        borderColor="black"
+        position={'relative'}
+      >
+        <Button
+          position={'absolute'}
+          top={0}
+          right={0}
+          colorScheme="red"
+          rounded={'full'}
+          onClick={deleteSubject}
+        >
+          X
+        </Button>
         <Img
           src={
-            'https://images.unsplash.com/photo-1561089489-f13d5e730d72?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FsY3VsdXN8ZW58MHx8MHx8fDA%3D'
+            subject.banner
+              ? subject.banner
+              : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'
           }
           roundedTop={'sm'}
           objectFit="cover"
@@ -44,10 +91,10 @@ export default function BoardCard() {
           </Text>
         </Box>
         <Heading color={'black'} fontSize={'2xl'} noOfLines={1}>
-          Kalkulus II
+          {subject.name}
         </Heading>
         <Text color={'gray.500'} noOfLines={2}>
-          Tugas Mata Kuliah Kalkulus II oleh dosen Bu Nur
+          {subject.description}
         </Text>
       </Box>
       <HStack borderTop={'1px'} color="black">
