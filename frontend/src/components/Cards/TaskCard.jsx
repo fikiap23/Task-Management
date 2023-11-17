@@ -107,7 +107,7 @@ export default function TaskCard({ task, setTasks }) {
               variant="solid"
               onClick={(e) => {
                 e.preventDefault()
-                navigate(`/task/1`)
+                navigate(`/tasks/${subjectId}/${task._id}`)
               }}
             >
               Detail

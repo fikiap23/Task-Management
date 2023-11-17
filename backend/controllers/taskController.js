@@ -96,6 +96,33 @@ const taskController = {
       return res.status(500).json({ message: 'Internal Server Error' })
     }
   },
+  // Mendapatkan detail suatu tugas dari suatu mata pelajaran milik pengguna tertentu
+  getTaskDetail: async (req, res) => {
+    try {
+      const { subjectId, taskId } = req.params
+      const userId = req.user._id
+
+      const user = await User.findById(userId)
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' })
+      }
+
+      const subject = user.subjects.id(subjectId)
+      if (!subject) {
+        return res.status(404).json({ message: 'Subject not found' })
+      }
+
+      const task = subject.tasks.id(taskId)
+      if (!task) {
+        return res.status(404).json({ message: 'Task not found' })
+      }
+
+      return res.status(200).json(task)
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal Server Error' })
+    }
+  },
 }
 
 export default taskController

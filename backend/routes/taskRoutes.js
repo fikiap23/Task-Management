@@ -10,6 +10,9 @@ router.post('/:subjectId/create', protectRoute, taskController.createTask)
 // Rute untuk mendapatkan daftar tugas
 router.get('/:subjectId', protectRoute, taskController.getTasks)
 
+// Rute untuk mendapatkan detail suatu tugas
+router.get('/:subjectId/:taskId', protectRoute, taskController.getTaskDetail)
+
 // Rute untuk menghapus tugas
 router.delete('/:subjectId/:taskId', protectRoute, taskController.deleteTask)
 
