@@ -95,7 +95,7 @@ const TaskPage = () => {
             templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
           >
             {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task} setTasks={setTasks} />
             ))}
           </Grid>
         </Box>
