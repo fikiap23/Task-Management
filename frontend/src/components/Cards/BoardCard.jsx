@@ -90,7 +90,7 @@ export default function BoardCard({ subject }) {
               src={
                 subject.banner
                   ? subject.banner
-                  : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'
+                  : 'https://cdn.pixabay.com/photo/2015/07/27/20/16/book-863418_640.jpg'
               }
               roundedTop={'sm'}
               objectFit="cover"
