@@ -16,7 +16,6 @@ import userAtom from '../atoms/userAtom'
 import { useParams } from 'react-router-dom'
 
 const DetailTaskPage = () => {
-  const status = 'beres'
   const user = useRecoilValue(userAtom)
   const [loading, setLoading] = useState(true)
   const [task, setTask] = useState({})
@@ -76,7 +75,7 @@ const DetailTaskPage = () => {
           backgroundColor={useColorModeValue('white', 'gray.800')}
           width="100%"
         >
-          <Text fontSize="xl" fontWeight="bold" mb={2}>
+          <Text fontSize="xl" fontWeight="bold" mb={2} align="center">
             {task.title}
           </Text>
           <Text fontSize="md" mb={2}>
