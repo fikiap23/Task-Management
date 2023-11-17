@@ -16,6 +16,7 @@ const TaskPage = () => {
   const user = useRecoilValue(userAtom)
   const [loading, setLoading] = useState(true)
   const [subjectNames, setSubjectNames] = useState([])
+  console.log(tasks)
 
   useEffect(() => {
     const getSubjects = async () => {

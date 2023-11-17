@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom'
 
 export default function TaskCard({ task }) {
   const navigate = useNavigate()
+  console.log(task)
 
   return (
     <Box
@@ -25,7 +26,7 @@ export default function TaskCard({ task }) {
     >
       <Center mb={2}>
         <Text fontSize={'md'} fontWeight="medium" textDecor={'underline'}>
-          Tugas Individu
+          Tugas {task.type}
         </Text>
       </Center>
       <Flex justifyContent={'space-between'} alignItems={'center'}>
@@ -38,17 +39,20 @@ export default function TaskCard({ task }) {
           mb={2}
         >
           <Text fontSize={'xs'} fontWeight="medium">
-            Sosio Informatika
+            {task.subjectName}
           </Text>
         </Box>
         <Badge variant="solid" colorScheme="red">
-          Belum Selesai
+          {task.completed ? 'Selesai' : 'Belum Selesai'}
         </Badge>
       </Flex>
-      <Text fontWeight={600}>{'Bikin Makalah Teknologi Terbaru'}</Text>
-      <Text color={'gray.600'}>
-        {'Buat 5 teknologi yang ingin kamu pelajari sekarang '}
+      <Text fontWeight={600} textTransform={'capitalize'}>
+        {task.title}
       </Text>
+      <Box
+        dangerouslySetInnerHTML={{ __html: task.description }}
+        noOfLines={3}
+      />
       <Flex mt={2} alignItems={'center'} justifyContent={'space-between'}>
         <Button
           colorScheme="green"
@@ -61,7 +65,7 @@ export default function TaskCard({ task }) {
           Detail
         </Button>
         <Text fontStyle={'italic'} fontSize={'xs'}>
-          Deadline: 1 Januari 2022, 10:00
+          {task.dueDate}
         </Text>
       </Flex>
     </Box>
