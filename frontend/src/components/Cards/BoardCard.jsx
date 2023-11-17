@@ -2,7 +2,16 @@
 'use client'
 
 import { useState } from 'react'
-import { Box, Heading, Text, Img, Flex, HStack, Button } from '@chakra-ui/react'
+import {
+  Box,
+  Heading,
+  Text,
+  Img,
+  Flex,
+  HStack,
+  Button,
+  Spinner,
+} from '@chakra-ui/react'
 import { BsArrowUpRight, BsHeartFill, BsHeart } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import useShowToast from '../../hooks/useShowToast'
@@ -15,11 +24,14 @@ export default function BoardCard({ subject }) {
   const [subjects, setSubjects] = useRecoilState(subjectsAtom)
   const showToast = useShowToast()
   const subjectId = subject._id
+  const [loading, setLoading] = useState(false)
 
   const deleteSubject = async () => {
     try {
       if (!window.confirm('Are you sure you want to delete this subject?'))
         return
+
+      setLoading(true)
       const response = await fetch(`/v1/api/subjects/${subjectId}`, {
         method: 'DELETE',
         headers: {
@@ -34,109 +46,121 @@ export default function BoardCard({ subject }) {
 
       showToast('Success', 'Subject deleted successfully', 'success')
       setSubjects(subjects.filter((s) => s._id !== subjectId))
+      setLoading(false)
     } catch (error) {
       showToast('Error', error.message, 'error')
+      setLoading(false)
     }
   }
 
   return (
-    <Box
-      w={{ base: '100%', md: '250px' }}
-      rounded={'sm'}
-      overflow={'hidden'}
-      bg="white"
-      border={'1px'}
-      borderColor="black"
-    >
-      <Box
-        h={'200px'}
-        borderBottom={'1px'}
-        borderColor="black"
-        position={'relative'}
-      >
-        <Button
-          position={'absolute'}
-          top={0}
-          right={0}
-          colorScheme="red"
-          rounded={'full'}
-          onClick={deleteSubject}
-        >
-          X
-        </Button>
-        <Img
-          src={
-            subject.banner
-              ? subject.banner
-              : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'
-          }
-          roundedTop={'sm'}
-          objectFit="cover"
-          h="full"
-          w="full"
-          alt={'Blog Image'}
-        />
-      </Box>
-      <Box p={4}>
+    <>
+      {loading && (
+        <Flex justifyContent={'center'} width={'full'}>
+          <Spinner size={'xl'} />
+        </Flex>
+      )}
+
+      {!loading && (
         <Box
-          bg={subject.type_subject === 'Umum' ? 'black' : 'green.500'}
-          display={'inline-block'}
-          px={2}
-          py={1}
-          color="white"
-          mb={2}
+          w={{ base: '100%', md: '250px' }}
+          rounded={'sm'}
+          overflow={'hidden'}
+          bg="white"
+          border={'1px'}
+          borderColor="black"
         >
-          <Text fontSize={'xs'} fontWeight="medium">
-            {subject.type_subject}
-          </Text>
-        </Box>
-        <Heading color={'black'} fontSize={'2xl'} noOfLines={1}>
-          {subject.name}
-        </Heading>
-        <Text color={'black'} fontSize={'md'} noOfLines={2}>
-          Dosen: {subject.dosen}
-        </Text>
-      </Box>
-      <HStack borderTop={'1px'} color="black">
-        <Flex
-          p={4}
-          alignItems="center"
-          justifyContent={'space-between'}
-          roundedBottom={'sm'}
-          cursor={'pointer'}
-          w="full"
-          onClick={(e) => {
-            e.preventDefault()
-            navigate(`/tasks/${subjectId}`)
-          }}
-        >
-          <Text
-            fontSize={'md'}
-            fontWeight={'semibold'}
-            onClick={() => {
-              navigate(`/tasks/${subjectId}`)
-            }}
+          <Box
+            h={'200px'}
+            borderBottom={'1px'}
+            borderColor="black"
+            position={'relative'}
           >
-            View more
-          </Text>
-          <BsArrowUpRight />
-        </Flex>
-        <Flex
-          p={4}
-          alignItems="center"
-          justifyContent={'space-between'}
-          roundedBottom={'sm'}
-          borderLeft={'1px'}
-          cursor="pointer"
-          onClick={() => setLiked(!liked)}
-        >
-          {liked ? (
-            <BsHeartFill fill="red" fontSize={'24px'} />
-          ) : (
-            <BsHeart fontSize={'24px'} />
-          )}
-        </Flex>
-      </HStack>
-    </Box>
+            <Button
+              position={'absolute'}
+              top={0}
+              right={0}
+              colorScheme="red"
+              rounded={'full'}
+              onClick={deleteSubject}
+            >
+              X
+            </Button>
+            <Img
+              src={
+                subject.banner
+                  ? subject.banner
+                  : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'
+              }
+              roundedTop={'sm'}
+              objectFit="cover"
+              h="full"
+              w="full"
+              alt={'Blog Image'}
+            />
+          </Box>
+          <Box p={4}>
+            <Box
+              bg={subject.type_subject === 'Umum' ? 'black' : 'green.500'}
+              display={'inline-block'}
+              px={2}
+              py={1}
+              color="white"
+              mb={2}
+            >
+              <Text fontSize={'xs'} fontWeight="medium">
+                {subject.type_subject}
+              </Text>
+            </Box>
+            <Heading color={'black'} fontSize={'2xl'} noOfLines={1}>
+              {subject.name}
+            </Heading>
+            <Text color={'black'} fontSize={'md'} noOfLines={2}>
+              Dosen: {subject.dosen}
+            </Text>
+          </Box>
+          <HStack borderTop={'1px'} color="black">
+            <Flex
+              p={4}
+              alignItems="center"
+              justifyContent={'space-between'}
+              roundedBottom={'sm'}
+              cursor={'pointer'}
+              w="full"
+              onClick={(e) => {
+                e.preventDefault()
+                navigate(`/tasks/${subjectId}`)
+              }}
+            >
+              <Text
+                fontSize={'md'}
+                fontWeight={'semibold'}
+                onClick={() => {
+                  navigate(`/tasks/${subjectId}`)
+                }}
+              >
+                View more
+              </Text>
+              <BsArrowUpRight />
+            </Flex>
+            <Flex
+              p={4}
+              alignItems="center"
+              justifyContent={'space-between'}
+              roundedBottom={'sm'}
+              borderLeft={'1px'}
+              cursor="pointer"
+              onClick={() => setLiked(!liked)}
+            >
+              {liked ? (
+                <BsHeartFill fill="red" fontSize={'24px'} />
+              ) : (
+                <BsHeart fontSize={'24px'} />
+              )}
+            </Flex>
+          </HStack>
+        </Box>
+      )}
+    </>
   )
 }
