@@ -107,10 +107,16 @@ export default function BoardCard({ subject }) {
           w="full"
           onClick={(e) => {
             e.preventDefault()
-            navigate(`/task`)
+            navigate(`/tasks/${subjectId}`)
           }}
         >
-          <Text fontSize={'md'} fontWeight={'semibold'}>
+          <Text
+            fontSize={'md'}
+            fontWeight={'semibold'}
+            onClick={() => {
+              navigate(`/tasks/${subjectId}`)
+            }}
+          >
             View more
           </Text>
           <BsArrowUpRight />

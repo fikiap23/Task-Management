@@ -10,6 +10,14 @@ const taskSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      // required: true,
+    },
+    subjectName: {
+      type: String,
+      // required: true,
+    },
     dueDate: {
       type: Date,
       required: true,

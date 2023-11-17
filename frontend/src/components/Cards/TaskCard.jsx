@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 import {
@@ -12,7 +13,7 @@ import {
 
 import { useNavigate } from 'react-router-dom'
 
-export default function TaskCard() {
+export default function TaskCard({ task }) {
   const navigate = useNavigate()
 
   return (

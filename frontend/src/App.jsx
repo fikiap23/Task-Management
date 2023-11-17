@@ -29,12 +29,12 @@ function App() {
             />
 
             <Route
-              path="/task"
+              path="/tasks/:subjectId"
               element={user ? <TaskPage /> : <Navigate to={'/auth'} />}
             />
 
             <Route
-              path="/task/:taskId"
+              path="/tasks/:subjectId/:taskId"
               element={user ? <DetailTaskPage /> : <Navigate to={'/auth'} />}
             />
           </Routes>

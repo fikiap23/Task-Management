@@ -6,7 +6,7 @@ const taskController = {
     try {
       const { subjectId } = req.params
       const userId = req.user._id
-      const { title, description, dueDate } = req.body
+      const { title, description, type, subjectName, dueDate } = req.body
 
       const user = await User.findById(userId)
       if (!user) {
@@ -21,6 +21,8 @@ const taskController = {
       subject.tasks.push({
         title,
         description,
+        type,
+        subjectName,
         dueDate,
       })
 
@@ -51,7 +53,7 @@ const taskController = {
 
       const tasks = subject.tasks
 
-      return res.status(200).json({ tasks })
+      return res.status(200).json(tasks)
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: 'Internal Server Error' })

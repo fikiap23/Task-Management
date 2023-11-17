@@ -8,4 +8,6 @@ router.post('/create', protectRoute, subjectController.createSubject)
 router.get('/list', protectRoute, subjectController.getSubjects)
 router.delete('/:subjectId', protectRoute, subjectController.deleteSubject)
 
+router.get('/types', protectRoute, subjectController.getAllSubjectNames)
+
 export default router

@@ -90,6 +90,31 @@ const subjectController = {
       return res.status(500).json({ message: 'Internal Server Error' })
     }
   },
+
+  /// Mendapatkan daftar semua nama mata pelajaran
+  getAllSubjectNames: async (req, res) => {
+    try {
+      // Fetch user ID from the request
+      const userId = req.user._id
+
+      // Find the user in the database
+      const user = await User.findById(userId)
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' })
+      }
+
+      // Extract subject names from the user's subjects
+      const subjectNames = user.subjects.map((subject) => subject.name)
+
+      // Remove duplicate subject names (if any)
+      const uniqueSubjectNames = [...new Set(subjectNames)]
+
+      return res.status(200).json(uniqueSubjectNames)
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal Server Error' })
+    }
+  },
 }
 
 export default subjectController

@@ -11,9 +11,9 @@ import {
   FormControl,
   FormLabel,
   useDisclosure,
-  Textarea,
   Select,
   Box,
+  Input,
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
@@ -23,16 +23,20 @@ import 'react-date-range/dist/theme/default.css'
 
 const MAX_CHAR = 100
 
-function CreateTaskModal() {
+function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [titleTask, setTitleTask] = useState('')
   const initialRef = useRef(null)
   const finalRef = useRef(null)
+  const [titleTask, setTitleTask] = useState('')
+  const [taskType, setTaskType] = useState('')
+  const [selectedSubject, setSelectedSubject] = useState('')
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [date, setDate] = useState(new Date())
+  const [loading, setLoading] = useState(false)
+  const editorRef = useRef(null)
 
   const handleTitleTaskChange = (e) => {
     const inputText = e.target.value
-    e.target.style.height = '0px'
-    e.target.style.height = e.target.scrollHeight + 'px'
 
     if (inputText.length > MAX_CHAR) {
       const truncatedText = inputText.slice(0, MAX_CHAR)
@@ -41,19 +45,51 @@ function CreateTaskModal() {
       setTitleTask(inputText)
     }
   }
-  const editorRef = useRef(null)
+
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent())
     }
   }
 
-  const [showDatePicker, setShowDatePicker] = useState(false)
-  const [date, setDate] = useState(new Date())
-
   function onChange(date) {
     setDate(date)
     console.log(date)
+  }
+
+  const handleCreateTask = async () => {
+    try {
+      setLoading(true)
+
+      const response = await fetch(`/v1/api/tasks/${subjectId}/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: titleTask,
+          description: editorRef.current.getContent(),
+          subjectName: selectedSubject,
+          type: taskType,
+          dueDate: date,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorMessage = await response.json()
+        throw new Error(errorMessage.message || 'Failed to create task')
+      }
+
+      const result = await response.json()
+      setTasks((prevTasks) => [...prevTasks, result])
+      console.log(result.message) // Task created successfully
+      setLoading(false)
+      onClose()
+    } catch (error) {
+      console.error(error)
+      // Handle error appropriately in your frontend
+      setLoading(false)
+    }
   }
   return (
     <>
@@ -75,33 +111,35 @@ function CreateTaskModal() {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Judul</FormLabel>
-              <Textarea
+              <Input
                 placeholder="Post title goes here.."
                 onChange={handleTitleTaskChange}
                 value={titleTask}
-                style={{
-                  minHeight: '0px', // Tinggi awal yang lebih kecil
-                  resize: 'none',
-                  overflow: 'hidden',
-                }}
               />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Mata Kuliah</FormLabel>
-              <Select placeholder="Select option">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
+              <Select
+                placeholder="Select option"
+                onChange={(e) => setSelectedSubject(e.target.value)}
+              >
+                {subjectNames.map((subject) => (
+                  <option key={subject} value={subject}>
+                    {subject}
+                  </option>
+                ))}
               </Select>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Jenis Tugas </FormLabel>
-              <Select placeholder="Select option">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
+              <Select
+                placeholder="Select option"
+                onChange={(e) => setTaskType(e.target.value)}
+              >
+                <option value="Individual">Individual</option>
+                <option value="Kelompok">Kelompok</option>
               </Select>
             </FormControl>
 
@@ -160,7 +198,12 @@ function CreateTaskModal() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleCreateTask}
+              isLoading={loading}
+            >
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>
