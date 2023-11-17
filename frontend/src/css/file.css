@@ -1,0 +1,38 @@
+h1 {
+  color: aqua;
+}
+
+button {
+  height: 25px;
+  width: 50px;
+  background-color: blue;
+}
+
+textarea {
+  height: 200px;
+  width: 500px;
+}
+
+div {
+  text-align: center;
+}
+
+button {
+  width: fit-content;
+}
+
+.output-card {
+  width: 100px;
+  height: 100px;
+}
+
+.container-card {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+
+  /* background-color: aqua; */
+  gap: 10px;
+}
