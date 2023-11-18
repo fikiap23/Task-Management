@@ -84,6 +84,7 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
       setTasks((prevTasks) => [...prevTasks, result])
       console.log(result.message) // Task created successfully
       setLoading(false)
+      window.location.reload()
       onClose()
     } catch (error) {
       console.error(error)
