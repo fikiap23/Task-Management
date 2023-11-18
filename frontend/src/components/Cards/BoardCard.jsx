@@ -102,7 +102,7 @@ export default function BoardCard({ subject }) {
           <Box p={4}>
             <Box
               bg={subject.type_subject === 'Umum' ? 'black' : 'green.500'}
-              display={'inline-block'}
+              // display={'inline-block'}
               px={2}
               py={1}
               color="white"

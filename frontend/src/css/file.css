@@ -1,24 +1,21 @@
-h1 {
+.judul {
   color: aqua;
 }
 
-button {
+.tombol-biru {
   height: 25px;
   width: 50px;
   background-color: blue;
+  width: fit-content;
 }
 
-textarea {
+.grup-area {
   height: 200px;
   width: 500px;
 }
 
-div {
+.grup {
   text-align: center;
-}
-
-button {
-  width: fit-content;
 }
 
 .output-card {

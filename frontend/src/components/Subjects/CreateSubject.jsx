@@ -84,6 +84,7 @@ function CreateSubjectModal({ setSubjects }) {
       setSubjects((prevSubjects) => [...prevSubjects, result])
       showToast('Success', 'Subject created successfully', 'success')
       setLoading(false)
+      window.location.reload()
       onClose()
     } catch (error) {
       showToast('Error', error.message, 'error')
