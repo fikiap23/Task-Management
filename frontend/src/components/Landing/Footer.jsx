@@ -105,7 +105,7 @@ export default function Footer() {
               src="/playstore.png"
               alt="appstore"
               width={200}
-              height={50}
+              height={100}
             />
             <Image src="/appstore.png" alt="appstore" width={200} height={50} />
           </Stack>
@@ -126,7 +126,7 @@ export default function Footer() {
           justify={{ md: 'space-between' }}
           align={{ md: 'center' }}
         >
-          <Text>© 2023 Task Management. All rights reserved</Text>
+          <Text>© 2023 TaskPlus. All rights reserved</Text>
           <Stack direction={'row'} spacing={6}>
             <SocialButton label={'Twitter'} href={'#'}>
               <FaTwitter />
