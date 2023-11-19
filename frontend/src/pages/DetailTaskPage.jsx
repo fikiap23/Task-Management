@@ -7,6 +7,7 @@ import {
   Spacer,
   useColorModeValue,
   Spinner,
+  Button,
 } from '@chakra-ui/react'
 import { CheckCircleIcon, CloseIcon } from '@chakra-ui/icons'
 import Sidebar from '../components/Sidebar/Sidebar'
@@ -14,10 +15,12 @@ import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import { useParams } from 'react-router-dom'
+import UpdateTaskModal from '../components/Tasks/UpdateTaskModal'
 
 const DetailTaskPage = () => {
   const user = useRecoilValue(userAtom)
   const [loading, setLoading] = useState(true)
+  const [loadingStatus, setLoadingStatus] = useState(false)
   const [task, setTask] = useState({})
   const { subjectId, taskId } = useParams()
 
@@ -57,11 +60,43 @@ const DetailTaskPage = () => {
     getTaskDetail()
   }, [subjectId, taskId, user])
 
+  const handleCompleteTask = async () => {
+    try {
+      setLoadingStatus(true)
+      const response = await fetch(
+        `/v1/api/tasks/${subjectId}/${taskId}/status`,
+        {
+          method: 'PATCH', // Gunakan metode PATCH untuk mengubah status
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // Body berisi data yang ingin diubah, dalam hal ini completed menjadi true
+          body: JSON.stringify({
+            completed: true,
+          }),
+        }
+      )
+
+      if (!response.ok) {
+        const errorMessage = await response.json()
+        throw new Error(errorMessage.message || 'Failed to complete task')
+      }
+
+      window.location.reload()
+      setLoadingStatus(false)
+
+      console.log('Task completed successfully')
+    } catch (error) {
+      setLoadingStatus(false)
+      console.error(error)
+      // Handle error appropriately in your frontend
+    }
+  }
+
   return (
     <Flex>
-      <Box width={'300px'} className="hidden md:block  ">
-        <Sidebar />
-      </Box>
+      <Sidebar />
+
       {loading && (
         <Flex justifyContent={'center'}>
           <Spinner size={'xl'} />
@@ -115,6 +150,19 @@ const DetailTaskPage = () => {
           <Text fontSize="md" mb={2}>
             Deadline: {task.dueDate}
           </Text>
+          <Flex gap={2} justifyContent="flex-end">
+            <UpdateTaskModal
+              task={task}
+              subjectId={subjectId}
+            ></UpdateTaskModal>
+            <Button
+              colorScheme={`${task.completed ? 'red' : 'green'}`}
+              onClick={handleCompleteTask}
+              isLoading={loadingStatus}
+            >
+              {task.completed ? 'Belum Selesai' : 'Selesai'}
+            </Button>
+          </Flex>
         </Box>
       )}
     </Flex>

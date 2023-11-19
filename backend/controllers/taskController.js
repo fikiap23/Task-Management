@@ -96,6 +96,48 @@ const taskController = {
       return res.status(500).json({ message: 'Internal Server Error' })
     }
   },
+
+  // Mengupdate suatu tugas dari suatu mata pelajaran milik pengguna tertentu
+  updateTask: async (req, res) => {
+    try {
+      const { subjectId, taskId } = req.params
+      const userId = req.user._id
+      const { title, description, type, subjectName, dueDate } = req.body
+
+      const user = await User.findById(userId)
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' })
+      }
+
+      const subject = user.subjects.id(subjectId)
+      if (!subject) {
+        return res.status(404).json({ message: 'Subject not found' })
+      }
+
+      const task = subject.tasks.id(taskId)
+      if (!task) {
+        return res.status(404).json({ message: 'Task not found' })
+      }
+
+      // Update task properties
+      task.title = title
+      task.description = description
+      task.type = type
+      task.subjectName = subjectName
+      task.dueDate = dueDate
+
+      // Save changes to the database
+      await user.save()
+
+      return res
+        .status(200)
+        .json({ title, description, type, subjectName, dueDate })
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal Server Error' })
+    }
+  },
+
   // Mendapatkan detail suatu tugas dari suatu mata pelajaran milik pengguna tertentu
   getTaskDetail: async (req, res) => {
     try {
@@ -118,6 +160,42 @@ const taskController = {
       }
 
       return res.status(200).json(task)
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal Server Error' })
+    }
+  },
+
+  // Mengubah status suatu tugas menjadi selesai
+  completeTask: async (req, res) => {
+    try {
+      const { subjectId, taskId } = req.params
+      const userId = req.user._id
+
+      const user = await User.findById(userId)
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' })
+      }
+
+      const subject = user.subjects.id(subjectId)
+      if (!subject) {
+        return res.status(404).json({ message: 'Subject not found' })
+      }
+
+      const task = subject.tasks.id(taskId)
+      if (!task) {
+        return res.status(404).json({ message: 'Task not found' })
+      }
+
+      // Toggle the completed status
+      task.completed = !task.completed
+
+      // Save changes to the database
+      await user.save()
+
+      return res
+        .status(200)
+        .json({ message: 'Task status updated successfully' })
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: 'Internal Server Error' })

@@ -13,6 +13,16 @@ router.get('/:subjectId', protectRoute, taskController.getTasks)
 // Rute untuk mendapatkan detail suatu tugas
 router.get('/:subjectId/:taskId', protectRoute, taskController.getTaskDetail)
 
+// Rute untuk mengupdate tugas
+router.put('/:subjectId/:taskId', protectRoute, taskController.updateTask)
+
+// Rute untuk mengubah status suatu tugas
+router.patch(
+  '/:subjectId/:taskId/status',
+  protectRoute,
+  taskController.completeTask
+)
+
 // Rute untuk menghapus tugas
 router.delete('/:subjectId/:taskId', protectRoute, taskController.deleteTask)
 

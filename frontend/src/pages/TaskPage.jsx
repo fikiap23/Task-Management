@@ -61,9 +61,7 @@ const TaskPage = () => {
 
   return (
     <Flex>
-      <Box width={'300px'} className="hidden md:block  ">
-        <Sidebar />
-      </Box>
+      <Sidebar />
 
       {loading && (
         <Flex justifyContent={'center'} width={'full'}>
