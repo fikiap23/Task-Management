@@ -9,6 +9,7 @@ import DetailTaskPage from "./pages/DetailTaskPage";
 import HomePage from "./pages/HomePage";
 import TaskPage from "./pages/TaskPage";
 import GroupPage from "./pages/GroupPage";
+import ImageToPdf from "./pages/ImageToPdf";
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -42,6 +43,11 @@ function App() {
             <Route
               path="/tools"
               element={user ? <GroupPage /> : <Navigate to={"/auth"} />}
+            />
+
+            <Route
+              path="/tools2"
+              element={user ? <ImageToPdf /> : <Navigate to={"/auth"} />}
             />
           </Routes>
         </Container>
