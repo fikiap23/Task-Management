@@ -2,28 +2,29 @@ import { Container, Flex } from '@chakra-ui/react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import userAtom from './atoms/userAtom'
-import Header from './components/Header/Header'
+
 import AuthPage from './pages/AuthPage'
 import DetailTaskPage from './pages/DetailTaskPage'
 
-import HomePage from './pages/HomePage'
 import TaskPage from './pages/TaskPage'
 import GroupPage from './pages/GroupPage'
 import ImageToPdf from './pages/ImageToPdf'
 import SubjectPage from './pages/SubjectPage'
+import LandingPage from './pages/LandingPage'
+import Navbar from './components/Header/Navbar'
 
 function App() {
   const user = useRecoilValue(userAtom)
 
   return (
     <>
-      {user && <Header />}
+      <Navbar user={user}></Navbar>
       <Flex>
         <Container maxWidth={'full'} fontFamily={'arial'}>
           <Routes>
             <Route
               path="/"
-              element={user ? <HomePage /> : <Navigate to={'/auth'} />}
+              element={user ? <SubjectPage /> : <LandingPage />}
             />
 
             <Route

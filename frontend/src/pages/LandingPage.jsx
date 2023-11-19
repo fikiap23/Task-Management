@@ -9,15 +9,18 @@ import {
   Button,
   Image,
 } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
+
 import Feature from '../components/Landing/Feature'
 import Footer from '../components/Landing/Footer'
 import Testimony from '../components/Landing/Testimony'
 
-export default function HomePage() {
+export default function LandingPage() {
+  const navigate = useNavigate()
   return (
     <>
       {/* Hero Section */}
-      <Container maxW={'5xl'}>
+      <Container maxW={'5xl'} position={'relative'}>
         <Stack
           textAlign={'center'}
           align={'center'}
@@ -44,6 +47,7 @@ export default function HomePage() {
               colorScheme={'teal'}
               bg={'teal'}
               _hover={{ bg: 'teal.300' }}
+              onClick={() => navigate('/auth')}
             >
               Get started
             </Button>
