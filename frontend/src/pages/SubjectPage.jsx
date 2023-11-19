@@ -33,12 +33,10 @@ const SubjectPage = () => {
   }, [setSubjects, user])
 
   return (
-    <Flex>
-      <Box width={'300px'} className="hidden lg:block  ">
-        <Sidebar />
-      </Box>
+    <Flex gap={4} alignItems={'flex-start'}>
+      <Sidebar />
 
-      <Box mt={4} width={'100%'}>
+      <Box mt={4} w={'full'}>
         <CreateSubjectModal setSubjects={setSubjects} />
         <Grid
           gap={4}

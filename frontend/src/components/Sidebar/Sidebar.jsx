@@ -34,12 +34,10 @@ export default function Sidebar() {
   const { onClose } = useDisclosure()
 
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
-      />
-    </Box>
+    <SidebarContent
+      onClose={() => onClose}
+      display={{ base: 'none', md: 'block' }}
+    />
   )
 }
 
@@ -73,9 +71,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
       bg={useColorModeValue('white', 'gray.900')}
       borderRight="1px"
       borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'full', md: 60 }}
-      pos="fixed"
-      h="full"
+      className="w-[10%] md:w-[15%] lg:w-[30%]  sticky top-0 h-[100vh] hidden md:block"
+      maxWidth={'250px'}
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8">
