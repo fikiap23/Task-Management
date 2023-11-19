@@ -84,7 +84,7 @@ const Home = () => {
         </div>
         {/* <Info /> */}
         <a href="https://github.com/anshuthopsee/image2pdf">
-          Thanks for anshuthopsee
+          Thanks to anshuthopsee
         </a>
       </div>
     </>
