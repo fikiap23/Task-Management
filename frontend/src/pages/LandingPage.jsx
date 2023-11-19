@@ -45,14 +45,18 @@ export default function LandingPage() {
               rounded={'full'}
               px={6}
               colorScheme={'teal'}
-              bg={'teal'}
               _hover={{ bg: 'teal.300' }}
               onClick={() => navigate('/auth')}
             >
               Get started
             </Button>
-            <Button rounded={'full'} px={6}>
-              Learn more
+            <Button
+              colorScheme={'gray'}
+              rounded={'full'}
+              px={6}
+              onClick={() => navigate('/tools')}
+            >
+              Try only tools
             </Button>
           </Stack>
           <Flex w={'full'} justify={'center'} bg={'gray.100'} rounded={'3xl'}>

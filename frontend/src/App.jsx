@@ -12,6 +12,7 @@ import ImageToPdf from './pages/ImageToPdf'
 import SubjectPage from './pages/SubjectPage'
 import LandingPage from './pages/LandingPage'
 import Navbar from './components/Header/Navbar'
+import Tools from './pages/ToolsPage'
 
 function App() {
   const user = useRecoilValue(userAtom)
@@ -47,15 +48,10 @@ function App() {
               element={user ? <DetailTaskPage /> : <Navigate to={'/auth'} />}
             />
 
-            <Route
-              path="/tools"
-              element={user ? <GroupPage /> : <Navigate to={'/auth'} />}
-            />
+            <Route path="/tools" element={<Tools />} />
 
-            <Route
-              path="/tools2"
-              element={user ? <ImageToPdf /> : <Navigate to={'/auth'} />}
-            />
+            <Route path="/tools/groups-generate" element={<GroupPage />} />
+            <Route path="/tools/img-to-pdf" element={<ImageToPdf />} />
           </Routes>
         </Container>
       </Flex>
