@@ -1,5 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+import path from 'path'
 import connectDB from './db/connectDB.js'
 import cookieParser from 'cookie-parser'
 import userRoutes from './routes/userRoutes.js'
@@ -23,6 +26,17 @@ app.use(cookieParser())
 app.use('/v1/api/users', userRoutes)
 app.use('/v1/api/subjects', subjectRoutes)
 app.use('/v1/api/tasks', taskRoutes)
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+const rootPath = path.resolve(__dirname, '../')
+
+app.use(express.static(path.join(rootPath, 'frontend/dist')))
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(rootPath, 'frontend/dist/index.html'))
+})
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)
