@@ -26,7 +26,7 @@ body {
 } */
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
@@ -239,7 +239,7 @@ a:hover {
   width: 120px;
   margin: 0;
 }
-h1 {
+.title-pdf {
   font-family: monospace;
   text-align: center;
   color: aqua;
@@ -290,7 +290,7 @@ h1 {
   background-color: white;
   outline: none;
   font-size: 14px;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
   animation: zoom-in-zoom-out 1s ease;
   user-select: none;
@@ -343,7 +343,7 @@ h1 {
   color: white;
   font-size: 14px;
   animation: bounceInDown 1s ease;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 

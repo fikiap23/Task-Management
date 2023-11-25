@@ -23,7 +23,7 @@ import { Link } from 'react-router-dom'
 
 const LinkItems = [
   { name: 'Home', icon: AiOutlineHome, path: '/' },
-  { name: 'Tasks', icon: BiTask, path: '/subjects' },
+  { name: 'Tasks', icon: BiTask, path: '/tasks' },
   { name: 'Notes', icon: CiStickyNote, path: '/notes' },
   { name: 'Favourites', icon: AiOutlineStar, path: '/favourites' },
   { name: 'Tools', icon: PiToolboxLight, path: '/tools' },
