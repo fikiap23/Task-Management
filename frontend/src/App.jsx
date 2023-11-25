@@ -13,6 +13,7 @@ import SubjectPage from './pages/SubjectPage'
 import LandingPage from './pages/LandingPage'
 import Navbar from './components/Header/Navbar'
 import Tools from './pages/ToolsPage'
+import NotesPage from './pages/NotesPage'
 
 function App() {
   const user = useRecoilValue(userAtom)
@@ -46,6 +47,10 @@ function App() {
             <Route
               path="/tasks/:subjectId/:taskId"
               element={user ? <DetailTaskPage /> : <Navigate to={'/auth'} />}
+            />
+            <Route
+              path="/notes"
+              element={user ? <NotesPage /> : <Navigate to={'/auth'} />}
             />
 
             <Route path="/tools" element={<Tools />} />

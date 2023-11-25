@@ -1,4 +1,4 @@
-import User from '../models/userModel.js'
+import { User } from '../models/userModel.js'
 
 const taskController = {
   // Membuat tugas baru untuk suatu mata pelajaran milik pengguna tertentu
