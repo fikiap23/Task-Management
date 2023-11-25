@@ -1,63 +1,51 @@
 /* eslint-disable react/prop-types */
-import { Box, Flex, Grid, Spinner } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Text,
+  Grid,
+  Spinner,
+  Button,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { tasksAtom } from '../atoms/taskAtom'
+import { Link } from 'react-router-dom'
+import { useRecoilValue } from 'recoil'
+
 import userAtom from '../atoms/userAtom'
-
-import TaskCard from '../components/Cards/TaskCard'
 import Sidebar from '../components/Sidebar/Sidebar'
-import CreateTaskModal from '../components/Tasks/CreateTaskModal'
 
-const TaskPage = () => {
-  const { subjectId } = useParams()
-  const [tasks, setTasks] = useRecoilState(tasksAtom)
+const TasksPage = () => {
   const user = useRecoilValue(userAtom)
   const [loading, setLoading] = useState(true)
-  const [subjectNames, setSubjectNames] = useState([])
-  console.log(tasks)
+  const [subjects, setSubjects] = useState([])
 
   useEffect(() => {
     const getSubjects = async () => {
       if (!user) return
-      setTasks([])
+
       try {
         setLoading(true)
 
-        // Fetch all subject names
-        const subjectNamesRes = await fetch('/v1/api/subjects/types', {
+        // Fetch all Subjects
+        const SubjectsRes = await fetch('/v1/api/subjects/list', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
         })
-        const subjectNamesData = await subjectNamesRes.json()
-        setSubjectNames(subjectNamesData)
-
-        // Fetch tasks for the selected subject
-        const tasksRes = await fetch(`/v1/api/tasks/${subjectId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        if (!tasksRes.ok) {
-          const errorMessage = await tasksRes.json()
-          throw new Error(errorMessage.message || 'Failed to fetch tasks')
-        }
-        const tasksData = await tasksRes.json()
-        setTasks(tasksData)
+        const SubjectsData = await SubjectsRes.json()
+        setSubjects(SubjectsData)
         setLoading(false)
       } catch (error) {
-        setTasks([])
+        setSubjects([])
       } finally {
         setLoading(false)
       }
     }
 
     getSubjects()
-  }, [subjectId, setTasks, user])
+  }, [user])
 
   return (
     <Flex>
@@ -68,32 +56,32 @@ const TaskPage = () => {
           <Spinner size={'xl'} />
         </Flex>
       )}
-      {!loading && !subjectId && (
-        <Flex
-          justifyContent="center"
-          alignItems="center"
-          h="100vh"
-          width={'100%'}
-        >
-          <Box textAlign="center">
-            <h1>Select a subject to create a task</h1>
-          </Box>
-        </Flex>
-      )}
-      {!loading && subjectId && (
-        <Box width={'100%'}>
-          <CreateTaskModal
-            subjectId={subjectId}
-            subjectNames={subjectNames}
-            setTasks={setTasks}
-          />
+      {!loading && (
+        <Box width={'100%'} m={4}>
           <Grid
-            key={subjectId}
             gap={4}
             templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
           >
-            {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} setTasks={setTasks} />
+            {subjects.map((subject) => (
+              <Box
+                key={subject._id}
+                p={4}
+                rounded={'md'}
+                shadow={'md'}
+                bg={useColorModeValue('white', 'gray.800')}
+              >
+                <Text fontSize={'lg'} fontWeight={'semibold'} mb={2}>
+                  {subject.name}
+                </Text>
+                <Text fontSize={'md'} mb={2}>
+                  {'Dosen: '} {subject.dosen}
+                </Text>
+                <Link to={`/tasks/${subject._id}`}>
+                  <Button colorScheme="teal" size="md">
+                    View Task
+                  </Button>
+                </Link>
+              </Box>
             ))}
           </Grid>
         </Box>
@@ -102,4 +90,4 @@ const TaskPage = () => {
   )
 }
 
-export default TaskPage
+export default TasksPage
