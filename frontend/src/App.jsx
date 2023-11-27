@@ -34,7 +34,7 @@ function App() {
 
             <Route
               path="/auth"
-              element={!user ? <AuthPage /> : <Navigate to={'/subjects'} />}
+              element={!user ? <AuthPage /> : <Navigate to={'/'} />}
             />
 
             <Route
