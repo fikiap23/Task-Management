@@ -12,14 +12,15 @@ import {
   FormLabel,
   useDisclosure,
   Select,
-  Box,
   Input,
+  Box,
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
-import { Calendar } from 'react-date-range'
+
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
+import NotificationsModal from './NotificationsModal'
 
 const MAX_CHAR = 100
 
@@ -30,10 +31,11 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
   const [titleTask, setTitleTask] = useState('')
   const [taskType, setTaskType] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
-  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [showDeadline, setShowDeadline] = useState(false)
   const [date, setDate] = useState(new Date())
   const [loading, setLoading] = useState(false)
   const editorRef = useRef(null)
+  console.log(date)
 
   const handleTitleTaskChange = (e) => {
     const inputText = e.target.value
@@ -50,11 +52,6 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
     if (editorRef.current) {
       console.log(editorRef.current.getContent())
     }
-  }
-
-  function onChange(date) {
-    setDate(date)
-    console.log(date)
   }
 
   const handleCreateTask = async () => {
@@ -188,12 +185,16 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
             <FormControl mt={4}>
               <Button
                 colorScheme="whatsapp"
-                onClick={() => setShowDatePicker(!showDatePicker)}
+                onClick={() => setShowDeadline(!showDeadline)}
               >
-                {showDatePicker ? 'Deadline has been set' : 'Set Deadline'}
+                {showDeadline ? 'Deadline has been set' : 'Set Deadline'}
               </Button>
-              <Box mt={-5} hidden={!showDatePicker}>
-                <Calendar date={date} onChange={onChange} />;
+              <Box mt={-5} hidden={!showDeadline}>
+                <NotificationsModal
+                  task={titleTask}
+                  setShowModal={setShowDeadline}
+                  setDate={setDate}
+                ></NotificationsModal>
               </Box>
             </FormControl>
           </ModalBody>

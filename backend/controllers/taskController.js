@@ -1,6 +1,50 @@
 import { User } from '../models/userModel.js'
+import push from 'web-push'
 
 const taskController = {
+  // Subscribe a service worker and receive a subscription object with created endpoint
+  subscribe: async (req, res) => {
+    try {
+      const publicVapidKey =
+        'BMch0p1Kqgj_LyOqyK-EFXx_QWfBzxoGbYvxX-6FlxUmWxBQG7YTjSJ4_XGbiwDEY-D3SmqneHG4F3_vKRsqeQg'
+
+      push.setVapidDetails(
+        'mailto:test@test.com',
+        publicVapidKey,
+        process.env.VAPID_PRIVATE_KEY
+      )
+
+      const { subscription, reminderTime, task } = req.body
+
+      console.log(subscription)
+      console.log('reminderTime:', reminderTime)
+      console.log('task:', task)
+
+      const payload = JSON.stringify({
+        title: 'Pengingat Tugas',
+        body: `Ini adalah pengingat untuk: "${task}"`,
+      })
+
+      // Masukkan objek ke dalam sendNotification
+      setTimeout(() => {
+        push
+          .sendNotification(JSON.parse(subscription), payload)
+          .then(() => {
+            // Kirim status 201 setelah notifikasi terkirim
+            res
+              .status(201)
+              .json({ message: 'Notifikasi terkirim dengan sukses' })
+          })
+          .catch((err) => {
+            console.error(err)
+            res.status(500).json({ message: 'Gagal mengirim notifikasi' })
+          })
+      }, reminderTime)
+    } catch (err) {
+      console.error(err)
+      res.status(500).json({ message: 'Kesalahan Server Internal' })
+    }
+  },
   // Membuat tugas baru untuk suatu mata pelajaran milik pengguna tertentu
   createTask: async (req, res) => {
     try {

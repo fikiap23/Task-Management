@@ -42,6 +42,11 @@ function App() {
               element={user ? <TasksPage /> : <Navigate to={'/auth'} />}
             />
 
+            {/* <Route
+              path="/tasks/create"
+              element={user ? <CreateTaskPage /> : <Navigate to={'/auth'} />}
+            /> */}
+
             <Route
               path="/tasks/:subjectId"
               element={user ? <TaskSubjectPage /> : <Navigate to={'/auth'} />}
