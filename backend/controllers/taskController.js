@@ -14,7 +14,7 @@ const taskController = {
         process.env.VAPID_PRIVATE_KEY
       )
 
-      const { subscription, reminderTime, task } = req.body
+      const { subscription, reminderTime, task, timeBefore } = req.body
 
       console.log(subscription)
       console.log('reminderTime:', reminderTime)
@@ -25,26 +25,30 @@ const taskController = {
         body: `Ini adalah pengingat untuk: "${task}"`,
       })
 
-      // Masukkan objek ke dalam sendNotification
-      setTimeout(() => {
+      const intervalId = setInterval(() => {
         push
           .sendNotification(JSON.parse(subscription), payload)
           .then(() => {
-            // Kirim status 201 setelah notifikasi terkirim
-            res
-              .status(201)
-              .json({ message: 'Notifikasi terkirim dengan sukses' })
+            // Log success or update your database if needed
+            console.log('Notifikasi terkirim dengan sukses')
           })
           .catch((err) => {
             console.error(err)
-            res.status(500).json({ message: 'Gagal mengirim notifikasi' })
+            // Handle notification sending failure
           })
+      }, timeBefore) // Delay in milliseconds
+
+      // Stop sending notifications after the specified reminder time
+      setTimeout(() => {
+        clearInterval(intervalId)
+        res.status(201).json({ message: 'Notifikasi terkirim dengan sukses' })
       }, reminderTime)
     } catch (err) {
       console.error(err)
       res.status(500).json({ message: 'Kesalahan Server Internal' })
     }
   },
+
   // Membuat tugas baru untuk suatu mata pelajaran milik pengguna tertentu
   createTask: async (req, res) => {
     try {

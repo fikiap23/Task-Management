@@ -36,7 +36,7 @@ export default function NotificationsModal({ setShowModal, task, setDate }) {
     const now = new Date()
     const reminderDate = new Date(date)
     setDate(reminderDate)
-    const diff = reminderDate - timeBefore - now
+    const diff = reminderDate - now
 
     if (diff > 0) {
       displayAlert(
@@ -92,6 +92,7 @@ export default function NotificationsModal({ setShowModal, task, setDate }) {
         subscription: JSON.stringify(sub),
         reminderTime,
         task,
+        timeBefore,
       },
       {
         headers: {
@@ -200,25 +201,29 @@ export default function NotificationsModal({ setShowModal, task, setDate }) {
                   className="text-md mb-2 mr-3 block font-bold text-gray-700"
                   htmlFor="timeBefore"
                 >
-                  Remind me:
+                  Remind me every:
                 </label>
 
                 <select
                   id="timeBefore"
                   className="ml-2 flex items-center"
-                  defaultValue={1.8e6}
+                  defaultValue={86400000}
                   onChange={(e) => setTimeBefore(e.target.value)}
                 >
-                  <option value={900000}>15 mins before</option>
-                  <option value={1.8e6}>30 mins before</option>
-                  <option value={3.6e6}>1 hour before</option>
-                  <option value={7.2e6}>2 hours before</option>
+                  <option value={60000}>1 mins </option>
+                  <option value={900000}>15 mins </option>
+                  <option value={3600000}>1 hour </option>
+                  <option value={7200000}>2 hours </option>
+                  <option value={10800000}>3 hours </option>
+                  <option value={21600000}>6 hours </option>
+                  <option value={86400000}>1 day </option>
+                  <option value={172800000}>2 days </option>
                 </select>
               </div>
             </form>
             <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
               <button
-                className="mr-3 mb-1 rounded bg-red-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-red-600"
+                className="mr-3 mb-1 rounded bg-teal-600 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-red-600"
                 type="button"
                 onClick={webPushAPINotificationCall}
               >
