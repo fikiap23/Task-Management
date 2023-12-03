@@ -7,6 +7,9 @@ const taskController = {
 
   subscribe: async (req, res) => {
     try {
+      let user = await User.findById(req.user._id)
+      // console.log(user);
+
       const publicVapidKey =
         'BMch0p1Kqgj_LyOqyK-EFXx_QWfBzxoGbYvxX-6FlxUmWxBQG7YTjSJ4_XGbiwDEY-D3SmqneHG4F3_vKRsqeQg'
 
@@ -16,7 +19,8 @@ const taskController = {
         process.env.VAPID_PRIVATE_KEY
       )
 
-      const { subscription, reminderTime, task, timeBefore } = req.body
+      const { subscription, reminderTime, task, timeBefore, dateDetail } =
+        req.body
 
       console.log(subscription)
       console.log('reminderTime:', reminderTime)
@@ -44,8 +48,8 @@ const taskController = {
         axios
           .post('http://localhost:5001/send-message', {
             session: 'mysession',
-            to: '6285280701948',
-            text: `Hai [Nama],\n\nTaskPlus hanya ingin memberitahu bahwa ada tugas kuliah yang harus diselesaikan. Berikut detailnya:\n\n- Judul Tugas: [Judul Tugas]\n- Mata Kuliah: [Mata Kuliah]\n- Tenggat Waktu: [Tanggal dan Waktu Tenggat]\n\nHarap pastikan untuk menyelesaikan tugas ini tepat waktu. Semangat ya 😄\n\nTerima kasih.`,
+            to: user.phoneNumber,
+            text: `Hai ${user.name},\n\nTaskPlus hanya ingin memberitahu bahwa ada tugas kuliah yang harus diselesaikan. Berikut detailnya:\n\n- Judul Tugas: "${task}" \n- Tenggat Waktu: \n ${dateDetail}\n\nHarap pastikan untuk menyelesaikan tugas ini tepat waktu. Semangat ya 😄\n\nTerima kasih.`,
           })
           .then((response) => {
             console.log('HTTP request successful:', response.data)

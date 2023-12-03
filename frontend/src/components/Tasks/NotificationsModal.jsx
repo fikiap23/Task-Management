@@ -93,6 +93,7 @@ export default function NotificationsModal({ setShowModal, task, setDate }) {
         reminderTime,
         task,
         timeBefore,
+        dateDetail: ` Tanggal: ${day}, Pukul ${time} WIB`,
       },
       {
         headers: {

@@ -91,6 +91,10 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       minLength: 6,
