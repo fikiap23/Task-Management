@@ -32,6 +32,26 @@ const taskSchema = mongoose.Schema(
   }
 )
 
+const noteSchema = mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    subject: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subject',
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
+
 const subjectSchema = mongoose.Schema(
   {
     name: {
@@ -48,6 +68,7 @@ const subjectSchema = mongoose.Schema(
       type: String,
     },
     tasks: [taskSchema],
+    notes: [noteSchema],
   },
   {
     timestamps: true,
@@ -70,6 +91,10 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       minLength: 6,
@@ -80,6 +105,7 @@ const userSchema = mongoose.Schema(
       default: '',
     },
     subjects: [subjectSchema],
+    notes: [noteSchema],
   },
   {
     timestamps: true,
@@ -87,5 +113,6 @@ const userSchema = mongoose.Schema(
 )
 
 const User = mongoose.model('User', userSchema)
+const Subject = mongoose.model('Subject', subjectSchema)
 
-export default User
+export { User, Subject }

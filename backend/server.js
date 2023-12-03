@@ -9,6 +9,7 @@ import userRoutes from './routes/userRoutes.js'
 
 import subjectRoutes from './routes/subjectRoutes.js'
 import taskRoutes from './routes/taskRoutes.js'
+import notesRotes from './routes/notesRoutes.js'
 
 dotenv.config()
 
@@ -26,6 +27,7 @@ app.use(cookieParser())
 app.use('/v1/api/users', userRoutes)
 app.use('/v1/api/subjects', subjectRoutes)
 app.use('/v1/api/tasks', taskRoutes)
+app.use('/v1/api/notes', notesRotes)
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

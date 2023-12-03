@@ -1,62 +1,62 @@
-import { useContext } from "react";
-import { GeneralContext } from "../ImageToPdf/utils/GeneralContextProvider.jsx";
-import utils from "../ImageToPdf/utils/utils.jsx";
-import Popup from "./Popup.jsx";
+import { useContext } from 'react'
+import { GeneralContext } from '../ImageToPdf/utils/GeneralContextProvider.jsx'
+import utils from '../ImageToPdf/utils/utils.jsx'
+import Popup from './Popup.jsx'
 // import Info from "./Info.jsx";
-import Carousel from "./Carousel.jsx";
+import Carousel from './Carousel.jsx'
 
-const Utils = new utils();
+const Utils = new utils()
 
 const Home = () => {
-  const { files, setFiles, popup, setPopup } = useContext(GeneralContext);
+  const { files, setFiles, popup, setPopup } = useContext(GeneralContext)
 
   const handleFile = (e) => {
-    let filesArray = [...files];
+    let filesArray = [...files]
 
-    [...e.target.files].forEach((file) => {
-      if (file.type === "image/jpeg" || file.type === "image/png") {
-        filesArray.push(file);
+    ;[...e.target.files].forEach((file) => {
+      if (file.type === 'image/jpeg' || file.type === 'image/png') {
+        filesArray.push(file)
       }
-    });
+    })
 
     if (filesArray.length <= 20) {
-      setFiles(filesArray);
+      setFiles(filesArray)
     } else {
       setPopup({
         show: true,
-        message: "Exceeded limit of 20 images.",
+        message: 'Exceeded limit of 20 images.',
         timeout: 5,
-      });
+      })
     }
-  };
+  }
 
   const clearQueue = () => {
     if (files.length > 0) {
-      setFiles(() => []);
-      setPopup({ show: true, message: "Queue cleared.", timeout: 5 });
+      setFiles(() => [])
+      setPopup({ show: true, message: 'Queue cleared.', timeout: 5 })
     }
-  };
+  }
 
   const download = () => {
     if (files.length > 0) {
       setPopup({
         show: true,
-        message: "Converting images to PDF...",
+        message: 'Converting images to PDF...',
         timeout: 60,
-      });
+      })
       Utils.generatePDF(files).then(() =>
-        setPopup({ show: true, message: "Download completed!", timeout: 5 })
-      );
+        setPopup({ show: true, message: 'Download completed!', timeout: 5 })
+      )
     } else {
-      setPopup({ show: true, message: "Please upload images!", timeout: 5 });
+      setPopup({ show: true, message: 'Please upload images!', timeout: 5 })
     }
-  };
+  }
 
   return (
     <>
-      {popup.show ? <Popup /> : ""}
+      {popup.show ? <Popup /> : ''}
       <div className="container">
-        <h1>FITUR IMAGE TO PDF</h1>
+        <h1 className="title-pdf">FITUR IMAGE TO PDF</h1>
         <div className="box">
           <div className="wrapper">
             <span className="text">+</span>
@@ -66,9 +66,9 @@ const Home = () => {
             <p>MAX 20</p>
             <input
               id="file-upload"
-              type={"file"}
-              multiple={"multiple"}
-              accept={"image/png, image/jpeg"}
+              type={'file'}
+              multiple={'multiple'}
+              accept={'image/png, image/jpeg'}
               onChange={handleFile}
             />
           </div>
@@ -88,7 +88,7 @@ const Home = () => {
         </a>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

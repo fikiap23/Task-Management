@@ -30,6 +30,7 @@ export default function SignupCard() {
     name: '',
     username: '',
     email: '',
+    phoneNumber: '',
     password: '',
     repassword: '',
   })
@@ -96,6 +97,18 @@ export default function SignupCard() {
               value={inputs.email}
               type="email"
               placeholder="Email address"
+            />
+          </FormControl>
+
+          <FormControl id="phoneNumber" isRequired>
+            <FormLabel>whatsapp number (For Notification)</FormLabel>
+            <Input
+              onChange={(e) =>
+                setInputs({ ...inputs, phoneNumber: e.target.value })
+              }
+              value={inputs.phoneNumber}
+              type="number"
+              placeholder="628xxxxxxxxx"
             />
           </FormControl>
 

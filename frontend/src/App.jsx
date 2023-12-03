@@ -6,13 +6,17 @@ import userAtom from './atoms/userAtom'
 import AuthPage from './pages/AuthPage'
 import DetailTaskPage from './pages/DetailTaskPage'
 
-import TaskPage from './pages/TaskPage'
 import GroupPage from './pages/GroupPage'
 import ImageToPdf from './pages/ImageToPdf'
 import SubjectPage from './pages/SubjectPage'
 import LandingPage from './pages/LandingPage'
 import Navbar from './components/Header/Navbar'
 import Tools from './pages/ToolsPage'
+import NotesSubjectPage from './pages/NotesSubjectPage'
+import NotesPage from './pages/NotesPage'
+import DetailNotePage from './pages/DetailNotePage'
+import TaskSubjectPage from './pages/TaskSubjectPage'
+import TasksPage from './pages/TaskPage'
 
 function App() {
   const user = useRecoilValue(userAtom)
@@ -29,23 +33,40 @@ function App() {
             />
 
             <Route
-              path="/subjects"
-              element={user ? <SubjectPage /> : <Navigate to={'/auth'} />}
+              path="/auth"
+              element={!user ? <AuthPage /> : <Navigate to={'/'} />}
             />
 
             <Route
-              path="/auth"
-              element={!user ? <AuthPage /> : <Navigate to={'/subjects'} />}
+              path="/tasks"
+              element={user ? <TasksPage /> : <Navigate to={'/auth'} />}
             />
+
+            {/* <Route
+              path="/tasks/create"
+              element={user ? <CreateTaskPage /> : <Navigate to={'/auth'} />}
+            /> */}
 
             <Route
               path="/tasks/:subjectId"
-              element={user ? <TaskPage /> : <Navigate to={'/auth'} />}
+              element={user ? <TaskSubjectPage /> : <Navigate to={'/auth'} />}
             />
 
             <Route
               path="/tasks/:subjectId/:taskId"
               element={user ? <DetailTaskPage /> : <Navigate to={'/auth'} />}
+            />
+            <Route
+              path="/notes"
+              element={user ? <NotesPage /> : <Navigate to={'/auth'} />}
+            />
+            <Route
+              path="/notes/:subjectId"
+              element={user ? <NotesSubjectPage /> : <Navigate to={'/auth'} />}
+            />
+            <Route
+              path="/notes/:subjectId/:noteId"
+              element={user ? <DetailNotePage /> : <Navigate to={'/auth'} />}
             />
 
             <Route path="/tools" element={<Tools />} />

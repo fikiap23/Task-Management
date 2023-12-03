@@ -11,40 +11,36 @@ import {
   FormControl,
   FormLabel,
   useDisclosure,
-  Select,
-  Input,
   Box,
+  Input,
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
-
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
-import NotificationsModal from './NotificationsModal'
+import { Calendar } from 'react-date-range'
 
 const MAX_CHAR = 100
 
-function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
+function UpdateNoteModal({ note, subjectId }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const initialRef = useRef(null)
   const finalRef = useRef(null)
-  const [titleTask, setTitleTask] = useState('')
-  const [taskType, setTaskType] = useState('')
-  const [selectedSubject, setSelectedSubject] = useState('')
-  const [showDeadline, setShowDeadline] = useState(false)
-  const [date, setDate] = useState(new Date())
+  const [titleNote, setTitleNote] = useState(note.title)
+  const [selectedSubject, setSelectedSubject] = useState(note.subjectName)
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [date, setDate] = useState(new Date(note.createdAt))
   const [loading, setLoading] = useState(false)
   const editorRef = useRef(null)
-  console.log(date)
 
-  const handleTitleTaskChange = (e) => {
+  const handleTitleNoteChange = (e) => {
     const inputText = e.target.value
 
     if (inputText.length > MAX_CHAR) {
       const truncatedText = inputText.slice(0, MAX_CHAR)
-      setTitleTask(truncatedText)
+      setTitleNote(truncatedText)
     } else {
-      setTitleTask(inputText)
+      setTitleNote(inputText)
     }
   }
 
@@ -54,45 +50,49 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
     }
   }
 
-  const handleCreateTask = async () => {
+  function onChange(date) {
+    setDate(date)
+    console.log(date)
+  }
+
+  const handleUpdateNote = async () => {
     try {
       setLoading(true)
 
-      const response = await fetch(`/v1/api/tasks/${subjectId}/create`, {
-        method: 'POST',
+      const response = await fetch(`/v1/api/notes/${subjectId}/${note._id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: titleTask,
-          description: editorRef.current.getContent(),
-          subjectName: selectedSubject,
-          type: taskType,
-          dueDate: date,
+          title: titleNote,
+          content: editorRef.current.getContent(),
+          createdAt: date,
         }),
       })
 
       if (!response.ok) {
         const errorMessage = await response.json()
-        throw new Error(errorMessage.message || 'Failed to create task')
+        throw new Error(errorMessage.message || 'Failed to update note')
       }
 
       const result = await response.json()
-      setTasks((prevTasks) => [...prevTasks, result])
-      console.log(result.message) // Task created successfully
+
+      console.log(result.message) // Note updated successfully
       setLoading(false)
-      window.location.reload()
       onClose()
+      window.location.reload()
     } catch (error) {
       console.error(error)
       // Handle error appropriately in your frontend
       setLoading(false)
     }
   }
+
   return (
     <>
-      <Button onClick={onOpen} colorScheme="teal" size="md" marginBottom={4}>
-        Buat Tugas
+      <Button onClick={onOpen} colorScheme="blue" size="md" marginBottom={4}>
+        Update Note
       </Button>
 
       <Modal
@@ -104,50 +104,34 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Buat Tugas Baru</ModalHeader>
+          <ModalHeader>Update Note</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Judul</FormLabel>
               <Input
-                placeholder="Post title goes here.."
-                onChange={handleTitleTaskChange}
-                value={titleTask}
+                placeholder="Note title goes here.."
+                onChange={handleTitleNoteChange}
+                value={titleNote}
               />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Mata Kuliah</FormLabel>
-              <Select
-                placeholder="Select option"
-                onChange={(e) => setSelectedSubject(e.target.value)}
-              >
-                {subjectNames.map((subject) => (
-                  <option key={subject} value={subject}>
-                    {subject}
-                  </option>
-                ))}
-              </Select>
+              <Input
+                disabled={true}
+                onChange={handleTitleNoteChange}
+                value={selectedSubject}
+              />
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Jenis Tugas </FormLabel>
-              <Select
-                placeholder="Select option"
-                onChange={(e) => setTaskType(e.target.value)}
-              >
-                <option value="Individual">Individual</option>
-                <option value="Kelompok">Kelompok</option>
-              </Select>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Deskripsi</FormLabel>
+              <FormLabel>Konten</FormLabel>
               <>
                 <Editor
                   apiKey="4xvcku7hmu0bsqdx1nxec8k8faferlrtrjy7s9x1wdx4iqjd"
                   onInit={(evt, editor) => (editorRef.current = editor)}
-                  initialValue="<p>This is the initial content of the editor.</p>"
+                  initialValue={note.content}
                   init={{
                     height: 500,
                     menubar: false,
@@ -185,16 +169,14 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
             <FormControl mt={4}>
               <Button
                 colorScheme="whatsapp"
-                onClick={() => setShowDeadline(!showDeadline)}
+                onClick={() => setShowDatePicker(!showDatePicker)}
               >
-                {showDeadline ? 'Deadline has been set' : 'Set Deadline'}
+                {showDatePicker
+                  ? 'Tanggal dibuat sudah ditentukan'
+                  : 'Set Tanggal'}
               </Button>
-              <Box mt={-5} hidden={!showDeadline}>
-                <NotificationsModal
-                  task={titleTask}
-                  setShowModal={setShowDeadline}
-                  setDate={setDate}
-                ></NotificationsModal>
+              <Box mt={-5} hidden={!showDatePicker}>
+                <Calendar date={date} onChange={onChange} />;
               </Box>
             </FormControl>
           </ModalBody>
@@ -203,12 +185,12 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={handleCreateTask}
+              onClick={handleUpdateNote}
               isLoading={loading}
             >
-              Save
+              Simpan
             </Button>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onClose}>Batal</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -216,4 +198,4 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
   )
 }
 
-export default CreateTaskModal
+export default UpdateNoteModal

@@ -1,6 +1,78 @@
-import User from '../models/userModel.js'
+import { User } from '../models/userModel.js'
+import push from 'web-push'
+import axios from 'axios'
 
 const taskController = {
+  // Subscribe a service worker and receive a subscription object with created endpoint
+
+  subscribe: async (req, res) => {
+    try {
+      let user = await User.findById(req.user._id)
+      // console.log(user);
+
+      const publicVapidKey =
+        'BMch0p1Kqgj_LyOqyK-EFXx_QWfBzxoGbYvxX-6FlxUmWxBQG7YTjSJ4_XGbiwDEY-D3SmqneHG4F3_vKRsqeQg'
+
+      push.setVapidDetails(
+        'mailto:test@test.com',
+        publicVapidKey,
+        process.env.VAPID_PRIVATE_KEY
+      )
+
+      const { subscription, reminderTime, task, timeBefore, dateDetail } =
+        req.body
+
+      console.log(subscription)
+      console.log('reminderTime:', reminderTime)
+      console.log('task:', task)
+
+      const payload = JSON.stringify({
+        title: 'Pengingat Tugas',
+        body: `Ini adalah pengingat untuk: "${task}"`,
+      })
+
+      const sendNotificationAndRequest = () => {
+        // Send push notification
+        push
+          .sendNotification(JSON.parse(subscription), payload)
+          .then(() => {
+            // Log success or update your database if needed
+            console.log('Notifikasi terkirim dengan sukses')
+          })
+          .catch((err) => {
+            console.error(err)
+            // Handle notification sending failure
+          })
+
+        // Make HTTP request to http://localhost:5001/send-message
+        axios
+          .post('http://localhost:5001/send-message', {
+            session: 'mysession',
+            to: user.phoneNumber,
+            text: `Hai ${user.name},\n\nTaskPlus hanya ingin memberitahu bahwa ada tugas kuliah yang harus diselesaikan. Berikut detailnya:\n\n- Judul Tugas: "${task}" \n- Tenggat Waktu: \n ${dateDetail}\n\nHarap pastikan untuk menyelesaikan tugas ini tepat waktu. Semangat ya 😄\n\nTerima kasih.`,
+          })
+          .then((response) => {
+            console.log('HTTP request successful:', response.data)
+          })
+          .catch((error) => {
+            console.error('HTTP request failed:', error.message)
+          })
+      }
+
+      // Execute the function at each interval
+      const intervalId = setInterval(sendNotificationAndRequest, timeBefore) // Delay in milliseconds
+
+      // Stop sending notifications and requests after the specified reminder time
+      setTimeout(() => {
+        clearInterval(intervalId)
+        res.status(201).json({ message: 'Notifikasi terkirim dengan sukses' })
+      }, reminderTime)
+    } catch (err) {
+      console.error(err)
+      res.status(500).json({ message: 'Kesalahan Server Internal' })
+    }
+  },
+
   // Membuat tugas baru untuk suatu mata pelajaran milik pengguna tertentu
   createTask: async (req, res) => {
     try {

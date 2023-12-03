@@ -15,10 +15,10 @@ import { useRecoilValue } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import Sidebar from '../components/Sidebar/Sidebar'
 
-const TasksPage = () => {
+const NotesPage = () => {
   const user = useRecoilValue(userAtom)
   const [loading, setLoading] = useState(true)
-  const [subjects, setSubjects] = useState([])
+  const [subject, setSubject] = useState([])
 
   useEffect(() => {
     const getSubjects = async () => {
@@ -27,18 +27,18 @@ const TasksPage = () => {
       try {
         setLoading(true)
 
-        // Fetch all Subjects
-        const SubjectsRes = await fetch('/v1/api/subjects/list', {
+        // Fetch all subject names
+        const subjectRes = await fetch('/v1/api/subjects/list', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
         })
-        const SubjectsData = await SubjectsRes.json()
-        setSubjects(SubjectsData)
+        const subjectData = await subjectRes.json()
+        setSubject(subjectData)
         setLoading(false)
       } catch (error) {
-        setSubjects([])
+        setSubject([])
       } finally {
         setLoading(false)
       }
@@ -62,7 +62,7 @@ const TasksPage = () => {
             gap={4}
             templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
           >
-            {subjects.map((subject) => (
+            {subject.map((subject) => (
               <Box
                 key={subject._id}
                 p={4}
@@ -76,9 +76,9 @@ const TasksPage = () => {
                 <Text fontSize={'md'} mb={2}>
                   {'Dosen: '} {subject.dosen}
                 </Text>
-                <Link to={`/tasks/${subject._id}`}>
+                <Link to={`/notes/${subject._id}`}>
                   <Button colorScheme="teal" size="md">
-                    View Task
+                    View Notes
                   </Button>
                 </Link>
               </Box>
@@ -90,4 +90,4 @@ const TasksPage = () => {
   )
 }
 
-export default TasksPage
+export default NotesPage

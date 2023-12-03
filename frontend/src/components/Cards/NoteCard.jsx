@@ -12,24 +12,22 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { format, parseISO } from 'date-fns'
+
 import { useNavigate, useParams } from 'react-router-dom'
 import useShowToast from '../../hooks/useShowToast'
 
-export default function TaskCard({ task, setTasks }) {
+export default function NoteCard({ note, setNotes }) {
   const navigate = useNavigate()
   const { subjectId } = useParams()
   const showToast = useShowToast()
   const [loading, setLoading] = useState(false)
-  // Mengonversi dueDate ke format yang diinginkan
-  const dueDate = parseISO(task.dueDate)
-  const formattedDueDate = format(dueDate, "dd MMMM yyyy HH:mm:ss 'WIB'")
-  const deleteTask = async () => {
+
+  const deleteNote = async () => {
     try {
-      if (!window.confirm('Are you sure you want to delete this task?')) return
+      if (!window.confirm('Are you sure you want to delete this note?')) return
 
       setLoading(true)
-      const response = await fetch(`/v1/api/tasks/${subjectId}/${task._id}`, {
+      const response = await fetch(`/v1/api/notes/${subjectId}/${note._id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -38,11 +36,11 @@ export default function TaskCard({ task, setTasks }) {
 
       if (!response.ok) {
         const errorMessage = await response.json()
-        throw new Error(errorMessage.message || 'Failed to delete task')
+        throw new Error(errorMessage.message || 'Failed to delete note')
       }
 
-      showToast('Success', 'Task deleted successfully', 'success')
-      setTasks((prevTasks) => prevTasks.filter((t) => t._id !== task._id))
+      showToast('Success', 'Note deleted successfully', 'success')
+      setNotes((prevNotes) => prevNotes.filter((n) => n._id !== note._id))
       setLoading(false)
     } catch (error) {
       showToast('Error', error.message, 'error')
@@ -71,37 +69,21 @@ export default function TaskCard({ task, setTasks }) {
             top={2}
             right={2}
             cursor={'pointer'}
-            onClick={deleteTask}
+            onClick={deleteNote}
           >
             X
           </Box>
           <Center mb={2}>
             <Text fontSize={'md'} fontWeight="medium" textDecor={'underline'}>
-              Tugas {task.type}
+              Note
             </Text>
           </Center>
-          <Flex justifyContent={'space-between'} alignItems={'center'}>
-            <Box
-              bg="black"
-              display={'inline-block'}
-              px={2}
-              py={1}
-              color="white"
-              mb={2}
-            >
-              <Text fontSize={'xs'} fontWeight="medium">
-                {task.subjectName}
-              </Text>
-            </Box>
-            <Badge variant="solid" colorScheme="red">
-              {task.completed ? 'Selesai' : 'Belum Selesai'}
-            </Badge>
-          </Flex>
+
           <Text fontWeight={600} textTransform={'capitalize'}>
-            {task.title}
+            {note.title}
           </Text>
           <Box
-            dangerouslySetInnerHTML={{ __html: task.description }}
+            dangerouslySetInnerHTML={{ __html: note.content }}
             noOfLines={3}
           />
           <Flex mt={2} alignItems={'center'} justifyContent={'space-between'}>
@@ -110,13 +92,14 @@ export default function TaskCard({ task, setTasks }) {
               variant="solid"
               onClick={(e) => {
                 e.preventDefault()
-                navigate(`/tasks/${subjectId}/${task._id}`)
+                navigate(`/notes/${subjectId}/${note._id}`)
               }}
             >
               Detail
             </Button>
             <Text fontStyle={'italic'} fontSize={'xs'}>
-              {formattedDueDate}
+              {/* You can customize the date display based on your needs */}
+              {note.createdAt}
             </Text>
           </Flex>
         </Box>

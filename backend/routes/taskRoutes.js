@@ -26,4 +26,7 @@ router.patch(
 // Rute untuk menghapus tugas
 router.delete('/:subjectId/:taskId', protectRoute, taskController.deleteTask)
 
+// subscribe
+router.post('/subscribe', protectRoute, taskController.subscribe)
+
 export default router

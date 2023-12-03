@@ -126,7 +126,7 @@ export default function BoardCard({ subject }) {
               justifyContent={'space-between'}
               roundedBottom={'sm'}
               cursor={'pointer'}
-              w="full"
+              w="50%"
               onClick={(e) => {
                 e.preventDefault()
                 navigate(`/tasks/${subjectId}`)
@@ -139,24 +139,31 @@ export default function BoardCard({ subject }) {
                   navigate(`/tasks/${subjectId}`)
                 }}
               >
-                View more
+                See tasks
               </Text>
-              <BsArrowUpRight />
             </Flex>
             <Flex
               p={4}
               alignItems="center"
               justifyContent={'space-between'}
               roundedBottom={'sm'}
+              w="50%"
               borderLeft={'1px'}
               cursor="pointer"
-              onClick={() => setLiked(!liked)}
+              onClick={(e) => {
+                e.preventDefault()
+                navigate(`/notes/${subjectId}`)
+              }}
             >
-              {liked ? (
-                <BsHeartFill fill="red" fontSize={'24px'} />
-              ) : (
-                <BsHeart fontSize={'24px'} />
-              )}
+              <Text
+                fontSize={'md'}
+                fontWeight={'semibold'}
+                onClick={() => {
+                  navigate(`/notes/${subjectId}`)
+                }}
+              >
+                See notes
+              </Text>
             </Flex>
           </HStack>
         </Box>

@@ -13,38 +13,33 @@ import {
   useDisclosure,
   Select,
   Input,
-  Box,
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
 
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
-import NotificationsModal from './NotificationsModal'
 
 const MAX_CHAR = 100
 
-function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
+function CreateNoteModal({ subjectId, subjectNames, setNotes }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const initialRef = useRef(null)
   const finalRef = useRef(null)
-  const [titleTask, setTitleTask] = useState('')
-  const [taskType, setTaskType] = useState('')
+  const [titleNote, setTitleNote] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
-  const [showDeadline, setShowDeadline] = useState(false)
-  const [date, setDate] = useState(new Date())
+
   const [loading, setLoading] = useState(false)
   const editorRef = useRef(null)
-  console.log(date)
 
-  const handleTitleTaskChange = (e) => {
+  const handleTitleNoteChange = (e) => {
     const inputText = e.target.value
 
     if (inputText.length > MAX_CHAR) {
       const truncatedText = inputText.slice(0, MAX_CHAR)
-      setTitleTask(truncatedText)
+      setTitleNote(truncatedText)
     } else {
-      setTitleTask(inputText)
+      setTitleNote(inputText)
     }
   }
 
@@ -54,34 +49,31 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
     }
   }
 
-  const handleCreateTask = async () => {
+  const handleCreateNote = async () => {
     try {
       setLoading(true)
 
-      const response = await fetch(`/v1/api/tasks/${subjectId}/create`, {
+      const response = await fetch(`/v1/api/notes/${subjectId}/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: titleTask,
-          description: editorRef.current.getContent(),
-          subjectName: selectedSubject,
-          type: taskType,
-          dueDate: date,
+          title: titleNote,
+          content: editorRef.current.getContent(),
         }),
       })
 
       if (!response.ok) {
         const errorMessage = await response.json()
-        throw new Error(errorMessage.message || 'Failed to create task')
+        throw new Error(errorMessage.message || 'Failed to create note')
       }
 
       const result = await response.json()
-      setTasks((prevTasks) => [...prevTasks, result])
-      console.log(result.message) // Task created successfully
+      setNotes((prevNotes) => [...prevNotes, result])
+      console.log(result.message) // Note created successfully
       setLoading(false)
-      window.location.reload()
+      window.location.reload() // Consider better ways to update your UI
       onClose()
     } catch (error) {
       console.error(error)
@@ -89,10 +81,11 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
       setLoading(false)
     }
   }
+
   return (
     <>
       <Button onClick={onOpen} colorScheme="teal" size="md" marginBottom={4}>
-        Buat Tugas
+        Create Note
       </Button>
 
       <Modal
@@ -104,20 +97,20 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Buat Tugas Baru</ModalHeader>
+          <ModalHeader>Create New Note</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>Judul</FormLabel>
+              <FormLabel>Title</FormLabel>
               <Input
-                placeholder="Post title goes here.."
-                onChange={handleTitleTaskChange}
-                value={titleTask}
+                placeholder="Note title goes here.."
+                onChange={handleTitleNoteChange}
+                value={titleNote}
               />
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Mata Kuliah</FormLabel>
+              <FormLabel>Subject</FormLabel>
               <Select
                 placeholder="Select option"
                 onChange={(e) => setSelectedSubject(e.target.value)}
@@ -131,18 +124,7 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Jenis Tugas </FormLabel>
-              <Select
-                placeholder="Select option"
-                onChange={(e) => setTaskType(e.target.value)}
-              >
-                <option value="Individual">Individual</option>
-                <option value="Kelompok">Kelompok</option>
-              </Select>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Deskripsi</FormLabel>
+              <FormLabel>Content</FormLabel>
               <>
                 <Editor
                   apiKey="4xvcku7hmu0bsqdx1nxec8k8faferlrtrjy7s9x1wdx4iqjd"
@@ -182,28 +164,13 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
                 <button onClick={log}>Log editor content</button>
               </>
             </FormControl>
-            <FormControl mt={4}>
-              <Button
-                colorScheme="whatsapp"
-                onClick={() => setShowDeadline(!showDeadline)}
-              >
-                {showDeadline ? 'Deadline has been set' : 'Set Deadline'}
-              </Button>
-              <Box mt={-5} hidden={!showDeadline}>
-                <NotificationsModal
-                  task={titleTask}
-                  setShowModal={setShowDeadline}
-                  setDate={setDate}
-                ></NotificationsModal>
-              </Box>
-            </FormControl>
           </ModalBody>
 
           <ModalFooter>
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={handleCreateTask}
+              onClick={handleCreateNote}
               isLoading={loading}
             >
               Save
@@ -216,4 +183,4 @@ function CreateTaskModal({ subjectId, subjectNames, setTasks }) {
   )
 }
 
-export default CreateTaskModal
+export default CreateNoteModal
