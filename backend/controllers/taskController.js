@@ -1,8 +1,10 @@
 import { User } from '../models/userModel.js'
 import push from 'web-push'
+import axios from 'axios'
 
 const taskController = {
   // Subscribe a service worker and receive a subscription object with created endpoint
+
   subscribe: async (req, res) => {
     try {
       const publicVapidKey =
@@ -25,7 +27,8 @@ const taskController = {
         body: `Ini adalah pengingat untuk: "${task}"`,
       })
 
-      const intervalId = setInterval(() => {
+      const sendNotificationAndRequest = () => {
+        // Send push notification
         push
           .sendNotification(JSON.parse(subscription), payload)
           .then(() => {
@@ -36,9 +39,26 @@ const taskController = {
             console.error(err)
             // Handle notification sending failure
           })
-      }, timeBefore) // Delay in milliseconds
 
-      // Stop sending notifications after the specified reminder time
+        // Make HTTP request to http://localhost:5001/send-message
+        axios
+          .post('http://localhost:5001/send-message', {
+            session: 'mysession',
+            to: '6285280701948',
+            text: `Hai [Nama],\n\nTaskPlus hanya ingin memberitahu bahwa ada tugas kuliah yang harus diselesaikan. Berikut detailnya:\n\n- Judul Tugas: [Judul Tugas]\n- Mata Kuliah: [Mata Kuliah]\n- Tenggat Waktu: [Tanggal dan Waktu Tenggat]\n\nHarap pastikan untuk menyelesaikan tugas ini tepat waktu. Semangat ya 😄\n\nTerima kasih.`,
+          })
+          .then((response) => {
+            console.log('HTTP request successful:', response.data)
+          })
+          .catch((error) => {
+            console.error('HTTP request failed:', error.message)
+          })
+      }
+
+      // Execute the function at each interval
+      const intervalId = setInterval(sendNotificationAndRequest, timeBefore) // Delay in milliseconds
+
+      // Stop sending notifications and requests after the specified reminder time
       setTimeout(() => {
         clearInterval(intervalId)
         res.status(201).json({ message: 'Notifikasi terkirim dengan sukses' })
