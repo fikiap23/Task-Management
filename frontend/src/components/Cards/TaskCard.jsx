@@ -12,7 +12,7 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-
+import { format, parseISO } from 'date-fns'
 import { useNavigate, useParams } from 'react-router-dom'
 import useShowToast from '../../hooks/useShowToast'
 
@@ -21,6 +21,9 @@ export default function TaskCard({ task, setTasks }) {
   const { subjectId } = useParams()
   const showToast = useShowToast()
   const [loading, setLoading] = useState(false)
+  // Mengonversi dueDate ke format yang diinginkan
+  const dueDate = parseISO(task.dueDate)
+  const formattedDueDate = format(dueDate, "dd MMMM yyyy HH:mm:ss 'WIB'")
   const deleteTask = async () => {
     try {
       if (!window.confirm('Are you sure you want to delete this task?')) return
@@ -113,7 +116,7 @@ export default function TaskCard({ task, setTasks }) {
               Detail
             </Button>
             <Text fontStyle={'italic'} fontSize={'xs'}>
-              {task.dueDate}
+              {formattedDueDate}
             </Text>
           </Flex>
         </Box>
