@@ -36,6 +36,9 @@ const rootPath = path.resolve(__dirname, '../')
 
 app.use(express.static(path.join(rootPath, 'frontend/dist')))
 
+app.get('/service-worker.js', (req, res) => {
+  res.sendFile(path.join(rootPath, 'frontend/dist/service-worker.js'))
+})
 app.get('*', (req, res) => {
   res.sendFile(path.join(rootPath, 'frontend/dist/index.html'))
 })
