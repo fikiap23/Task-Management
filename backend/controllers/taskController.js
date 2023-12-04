@@ -46,7 +46,7 @@ const taskController = {
 
         // Make HTTP request to http://localhost:5001/send-message
         axios
-          .post('http://localhost:5001/send-message', {
+          .post('http://149.28.139.38:5001/send-message', {
             session: 'mysession',
             to: user.phoneNumber,
             text: `Hai ${user.name},\n\nTaskPlus hanya ingin memberitahu bahwa ada tugas kuliah yang harus diselesaikan. Berikut detailnya:\n\n- Judul Tugas: "${task}" \n- Tenggat Waktu: \n ${dateDetail}\n\nHarap pastikan untuk menyelesaikan tugas ini tepat waktu. Semangat ya 😄\n\nTerima kasih.`,
