@@ -35,18 +35,18 @@ const toolsData = [
     href: '/tools/img-to-pdf',
   },
   {
-    heading: 'Class Schedule',
+    heading: 'Class Schedule (Login to try)',
     icon: <Icon as={RiCalendarTodoFill} w={10} h={10} color={'purple.400'} />,
     description:
       'Keep track of your daily classes, locations, and professors with a personalized class schedule.',
-    href: '#',
+    href: '/auth',
   },
   {
-    heading: 'Daily Planner',
+    heading: 'Daily Planner (Login to try)',
     icon: <Icon as={GrTask} w={10} h={10} color={'blue.400'} />,
     description:
       'Plan your day effectively by organizing tasks, deadlines, and personal activities in one place.',
-    href: '#',
+    href: '/auth',
   },
 ]
 
