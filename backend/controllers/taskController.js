@@ -33,16 +33,16 @@ const taskController = {
 
       const sendNotificationAndRequest = () => {
         // Send push notification
-        // push
-        //   .sendNotification(JSON.parse(subscription), payload)
-        //   .then(() => {
-        //     // Log success or update your database if needed
-        //     console.log('Notifikasi terkirim dengan sukses')
-        //   })
-        //   .catch((err) => {
-        //     console.error(err)
-        //     // Handle notification sending failure
-        //   })
+        push
+          .sendNotification(JSON.parse(subscription), payload)
+          .then(() => {
+            // Log success or update your database if needed
+            console.log('Notifikasi terkirim dengan sukses')
+          })
+          .catch((err) => {
+            console.error(err)
+            // Handle notification sending failure
+          })
 
         // Make HTTP request to http://localhost:5001/send-message
         axios
