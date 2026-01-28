@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/button'
+import { Button } from '@chakra-ui/react'
 import { useSetRecoilState } from 'recoil'
 
 import { FiLogOut } from 'react-icons/fi'
